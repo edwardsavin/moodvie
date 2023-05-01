@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-// Get user's Spotify access token
+// Get user's Spotify access token from Clerk API
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
