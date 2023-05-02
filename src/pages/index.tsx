@@ -21,7 +21,9 @@ const Home: NextPage = () => {
   ) as { data: string | undefined; error: Error };
 
   useEffect(() => {
-    if (error) toast.error(error.message);
+    if (error && error instanceof TypeError) {
+      toast.error(error.message);
+    }
   }, [error]);
 
   return (
