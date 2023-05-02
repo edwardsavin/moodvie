@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { RecentTracks } from "~/components/recent-tracks";
 import SignInSpotifyButton from "~/components/signin-spotify";
 import { fetchSpotifyToken } from "~/utils/fetchers";
+import { getRandomFetchTracksMessage } from "~/utils/loading-messages";
 
 const Home: NextPage = () => {
   const user = useUser();
@@ -33,11 +34,18 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div>
           {!user.isSignedIn && <SignInSpotifyButton />}
           {user.isSignedIn && <SignOutButton />}
         </div>
+
+        {user.isSignedIn && !spotifyAccessToken && (
+          <p className="text-center text-white">
+            {getRandomFetchTracksMessage()}
+          </p>
+        )}
         {spotifyAccessToken && (
           <RecentTracks spotifyAccessToken={spotifyAccessToken} />
         )}

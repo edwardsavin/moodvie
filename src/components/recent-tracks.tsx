@@ -14,6 +14,7 @@ type Track = {
 
 type TrackData = Track[] & { message?: string };
 
+// Display the most recent tracks from the user's Spotify history
 export const RecentTracks = ({
   spotifyAccessToken,
 }: {
@@ -30,7 +31,12 @@ export const RecentTracks = ({
     if (trackDataError) toast.error(trackDataError.message);
   }, [trackDataError]);
 
-  if (!trackData) return <div>Loading your most recent tracks...</div>;
+  if (!trackData)
+    return (
+      <div>
+        <p className="text-white">Almost there...</p>
+      </div>
+    );
 
   if (
     trackData.message === "Cannot read properties of undefined (reading 'map')"
@@ -46,7 +52,7 @@ export const RecentTracks = ({
   return (
     <div className="flex flex-row">
       {trackData.map((track) => (
-        <div key={track.id}>
+        <div className="text-white" key={track.id}>
           <p>{track.name}</p>
           <p>{track.artist}</p>
           <p>{track.album}</p>
