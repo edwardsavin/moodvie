@@ -1,4 +1,4 @@
-import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
@@ -41,7 +41,6 @@ const Home: NextPage = () => {
         {spotifyAccessToken && (
           <RecentTracks spotifyAccessToken={spotifyAccessToken} />
         )}
-        <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
       </main>
     </>
   );
