@@ -5,6 +5,7 @@ export type TrackData = {
     track: {
       name: string;
       artists: { name: string }[];
+      id: string;
       album: {
         name: string;
         images: { url: string }[];
@@ -36,6 +37,7 @@ export default async function handler(
       return {
         name: track.name,
         artist: track.artists?.[0]?.name ?? "Unknown Artist",
+        id: track.id,
         album: track.album.name ?? "Unknown Album",
         image: track.album.images?.[0]?.url ?? "default-image-url", // TODO: Add default image
       };

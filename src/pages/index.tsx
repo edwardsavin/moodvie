@@ -4,8 +4,8 @@ import Head from "next/head";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import useSWR from "swr";
-import { fetchSpotifyToken, fetchTracks } from "~/utils/fetchers";
-import type { TrackData } from "./api/spotify-fetch-tracks";
+import { RecentTracks } from "~/components/recent-tracks";
+import { fetchSpotifyToken } from "~/utils/fetchers";
 
 const Home: NextPage = () => {
   const user = useUser();
@@ -18,22 +18,9 @@ const Home: NextPage = () => {
     fetchSpotifyToken
   ) as { data: string | undefined; error: Error };
 
-  // Fetch tracks from Spotify
-  const { data: trackData, error: trackDataError } = useSWR(
-    spotifyAccessToken
-      ? [`./api/spotify-fetch-tracks`, spotifyAccessToken]
-      : null,
-    fetchTracks
-  ) as { data: TrackData[] | undefined; error: Error };
-
-  if (error) toast.error(error.message);
-  if (trackDataError) toast.error(trackDataError.message);
-
   useEffect(() => {
-    if (trackData) {
-      console.log(trackData);
-    }
-  }, [trackData]);
+    if (error) toast.error(error.message);
+  }, [error]);
 
   return (
     <>
@@ -50,6 +37,9 @@ const Home: NextPage = () => {
           {!user.isSignedIn && <SignInButton />}
           {user.isSignedIn && <SignOutButton />}
         </div>
+        {spotifyAccessToken && (
+          <RecentTracks spotifyAccessToken={spotifyAccessToken} />
+        )}
         <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
       </main>
     </>

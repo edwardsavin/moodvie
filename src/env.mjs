@@ -10,6 +10,7 @@ const server = z.object({
   CLERK_SECRET_KEY: z.string().min(1),
   SPOTIFY_CLIENT_SECRET: z.string().min(1),
   SPOTIFY_CLIENT_ID: z.string().min(1),
+  OPENAI_API_KEY: z.string().min(1),
 });
 
 /**
@@ -36,6 +37,7 @@ const processEnv = {
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
   SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 };
 
 // Don't touch the part below
