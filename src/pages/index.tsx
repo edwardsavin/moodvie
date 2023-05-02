@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import useSWR from "swr";
 import { RecentTracks } from "~/components/recent-tracks";
+import SignInSpotifyButton from "~/components/signin-spotify";
 import { fetchSpotifyToken } from "~/utils/fetchers";
 
 const Home: NextPage = () => {
@@ -34,7 +35,7 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div>
-          {!user.isSignedIn && <SignInButton />}
+          {!user.isSignedIn && <SignInSpotifyButton />}
           {user.isSignedIn && <SignOutButton />}
         </div>
         {spotifyAccessToken && (
