@@ -9,7 +9,7 @@ export const fetchSpotifyToken = async (url: string) => {
   return data.token;
 };
 
-// Fetch user's Spotify recently played tracks
+// Fetch user's Spotify recently played tracks from Spotify API
 export const fetchTracks = async (url: string, token: string) => {
   const res = await fetch(`${url}?token=${token}`);
   const data = (await res.json()) as TrackData[];
