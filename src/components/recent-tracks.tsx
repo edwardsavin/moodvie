@@ -1,18 +1,5 @@
-import useSWR from "swr";
-import { toast } from "react-hot-toast";
-import { fetchTracks } from "~/utils/fetchers";
 import Image from "next/image";
-import { useEffect } from "react";
-
-type Track = {
-  name: string;
-  artist: string;
-  id: string;
-  album: string;
-  image: string;
-};
-
-type TrackData = Track[] & { message?: string };
+import useRecentTracks from "~/utils/hooks/use-recent-tracks";
 
 // Display the most recent tracks from the user's Spotify history
 export const RecentTracks = ({
@@ -20,16 +7,7 @@ export const RecentTracks = ({
 }: {
   spotifyAccessToken: string;
 }) => {
-  const { data: trackData, error: trackDataError } = useSWR(
-    spotifyAccessToken
-      ? [`./api/spotify-fetch-tracks`, spotifyAccessToken]
-      : null,
-    fetchTracks
-  ) as { data: TrackData | undefined; error: Error };
-
-  useEffect(() => {
-    if (trackDataError) toast.error(trackDataError.message);
-  }, [trackDataError]);
+  const trackData = useRecentTracks(spotifyAccessToken);
 
   if (!trackData)
     return (

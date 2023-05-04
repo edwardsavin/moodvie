@@ -1,30 +1,14 @@
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect } from "react";
-import { toast } from "react-hot-toast";
-import useSWR from "swr";
 import { RecentTracks } from "~/components/recent-tracks";
 import SignInSpotifyButton from "~/components/signin-spotify";
-import { fetchSpotifyToken } from "~/utils/fetchers";
+import useSpotifyAccessToken from "~/utils/hooks/use-spotify-access-token";
 import { getRandomFetchTracksMessage } from "~/utils/loading-messages";
 
 const Home: NextPage = () => {
   const user = useUser();
-
-  // Fetch Spotify access token from Clerk API
-  const { data: spotifyAccessToken, error } = useSWR(
-    user.isSignedIn
-      ? `./api/auth/spotify-access-token?userId=${user.user.id}`
-      : null,
-    fetchSpotifyToken
-  ) as { data: string | undefined; error: Error };
-
-  useEffect(() => {
-    if (error && error instanceof TypeError) {
-      toast.error(error.message);
-    }
-  }, [error]);
+  const spotifyAccessToken = useSpotifyAccessToken(user);
 
   return (
     <>
