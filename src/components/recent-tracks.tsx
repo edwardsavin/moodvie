@@ -50,7 +50,7 @@ export const RecentTracks = ({
           </div>
         ))}
       </div>
-      <div className="mt-4">{FetchMovieRecommendationsButton(songsString)}</div>
+      <FetchMovieRecommendationsButton songsString={songsString} />
     </div>
   );
 };

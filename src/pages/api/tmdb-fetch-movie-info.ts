@@ -6,6 +6,7 @@ export type MovieInfo = {
   poster_path: string | undefined;
   vote_average: number | undefined;
   release_date: string | undefined;
+  id: number;
 };
 
 // Fetch movie info from TMDB API
