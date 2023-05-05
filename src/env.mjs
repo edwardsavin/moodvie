@@ -11,6 +11,7 @@ const server = z.object({
   SPOTIFY_CLIENT_SECRET: z.string().min(1),
   SPOTIFY_CLIENT_ID: z.string().min(1),
   OPENAI_API_KEY: z.string().min(1),
+  TMDB_API_KEY: z.string().min(1),
 });
 
 /**
@@ -38,6 +39,7 @@ const processEnv = {
   SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  TMDB_API_KEY: process.env.TMDB_API_KEY,
 };
 
 // Don't touch the part below
