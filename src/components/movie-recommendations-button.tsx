@@ -11,6 +11,7 @@ export type Movie = {
 // Start fetching movie recommendations based on the user's Spotify history
 const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
+  const [uniqueKey, setUniqueKey] = useState<number>(Date.now());
 
   const handleClick = async () => {
     try {
@@ -21,6 +22,8 @@ const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
         return { title, year: year?.slice(0, -1) };
       });
 
+      // Set unique key to force re-render of MovieRecommendations component
+      setUniqueKey(Date.now());
       setRecommendedMovies(mappedMovies as Movie[]);
     } catch (error) {
       toast.error("Something went wrong, please try again");
@@ -36,7 +39,7 @@ const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
         Get movie recommendations
       </button>
       {recommendedMovies.length > 0 && (
-        <MovieRecommendations movies={recommendedMovies} />
+        <MovieRecommendations key={uniqueKey} movies={recommendedMovies} />
       )}
     </>
   );
