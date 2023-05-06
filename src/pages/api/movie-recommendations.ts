@@ -16,11 +16,15 @@ export default async function handler(
     "1. Plain Jane by A$AP Ferg; 2. Strazile feat. (Mario V) by B.U.G. Mafia; 3. Poezie De Strada (Radio Edit) - Remix by B.U.G. Mafia; 4. 40 kmh by B.U.G. Mafia; 5. Dead Inside (Interlude) by XXXTENTACION";
   const exampleSongs2 =
     "1. Gherila PTM by B.U.G. Mafia; 2. Estu' Salbatic by B.U.G. Mafia; 3. Billie Jean by Michael Jackson; 4. The Time (Dirty Bit) by The Black Eyed Peas; 5. Beautiful Liar by Beyoncé";
+  const exampleSongs3 =
+    "1. What's Luv? (feat. Ashanti) by Fat Joe; 2. The Crack Attack by Fat Joe; 3. What's Luv? (feat. Ashanti) by Fat Joe; 4. TiK ToK by Kesha; 5. What's Luv? (feat. Ashanti) by Fat Joe";
 
   const exampleResponse1 =
     "Project X (2012); City of God (2002); Scarface (1983); The Fast and the Furious (2001); Fight Club (1999)";
   const exampleResponse2 =
     "The Godfather (1972); Training Day (2001); Moonwalker (1988); The Hangover (2009); Crazy Rich Asians (2018).";
+  const exampleResponse3 =
+    "Bad Boys II (2003); Carlito's Way (1993); Bad Boys II (2003); The Hangover (2009); Bad Boys II (2003)";
 
   const examplePrompt = `Recommend me 5 movies based on these 5 songs:${exampleSongs1} You should respond in one single line only with the name of the movies (and year in parentheses), separated by a semicolon and a space, nothing else.`;
 
@@ -51,10 +55,18 @@ export default async function handler(
         },
         {
           role: "user",
+          content: exampleSongs3,
+        },
+        {
+          role: "assistant",
+          content: exampleResponse3,
+        },
+        {
+          role: "user",
           content: songs,
         },
       ],
-      temperature: 0.6,
+      temperature: 0.7,
       max_tokens: 101,
     });
 
