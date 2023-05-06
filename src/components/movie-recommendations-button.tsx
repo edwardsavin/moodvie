@@ -15,7 +15,18 @@ const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
 
   const handleClick = async () => {
     try {
-      const movies = await getMovieRecommendations(songs.songsString);
+      let movies = await getMovieRecommendations(songs.songsString);
+
+      // Check if response matches expected template
+      const regex = /^\d+\.\s/;
+      const hasNumbers = movies.some((movie) => regex.test(movie));
+      if (hasNumbers) {
+        // Modify response to remove numbers
+        const modifiedMovies = movies.map((movie) =>
+          movie.replace(/^\d+\.\s/, "")
+        );
+        movies = modifiedMovies;
+      }
 
       const mappedMovies = movies.map((movie) => {
         const [title, year] = movie.split(" (");
