@@ -24,7 +24,7 @@ export default async function handler(
   const exampleResponse2 =
     "The Godfather (1972); Training Day (2001); Moonwalker (1988); The Hangover (2009); Crazy Rich Asians (2018).";
   const exampleResponse3 =
-    "Bad Boys II (2003); Carlito's Way (1993); Bad Boys II (2003); The Hangover (2009); Bad Boys II (2003)";
+    "Bad Boys II (2003); Carlito's Way (1993); 8 Mile (2002); The Hangover (2009); Love & Basketball (2000)";
 
   const examplePrompt = `Recommend me 5 movies based on these 5 songs:${exampleSongs1} You should respond in one single line only with the name of the movies (and year in parentheses), separated by a semicolon and a space, nothing else.`;
 
@@ -66,7 +66,7 @@ export default async function handler(
           content: songs,
         },
       ],
-      temperature: 0.7,
+      temperature: 0.5,
       max_tokens: 101,
     });
 
