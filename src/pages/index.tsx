@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         <title>Moodvie</title>
         <meta
           name="description"
-          content="Moodvie - get movie recommendations based on your music taste"
+          content="Moodvie - Get movie recommendations based on your mood and music taste."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
