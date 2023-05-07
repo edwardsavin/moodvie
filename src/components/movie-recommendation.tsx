@@ -114,6 +114,8 @@ export const MovieCard = (movie: { movie: Movie }) => {
 
   if (!movieInfo) return <div>Loading...</div>;
 
+  if (movieInfo.message === "No result found") return null;
+
   return (
     <div className="mt-6 flex flex-col" onClick={() => setShowModal(true)}>
       <div className="mt-4 flex flex-col">
