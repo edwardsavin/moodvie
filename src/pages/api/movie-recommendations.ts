@@ -26,7 +26,7 @@ export default async function handler(
   const exampleResponse3 =
     "Bad Boys II (2003); Carlito's Way (1993); 8 Mile (2002); The Hangover (2009); Love & Basketball (2000)";
 
-  const examplePrompt = `Recommend me 5 movies based on these 5 songs:${exampleSongs1} You should respond in one single line only with the name of the movies (and year in parentheses), separated by a semicolon and a space, nothing else.`;
+  const examplePrompt = `Recommend me 5 movies based on these 5 songs:${exampleSongs1} You should respond in one single line only with the name of the movies (and year in parentheses), separated by a semicolon and a space, nothing else. Please ensure that your recommendations include only movies and not TV shows.`;
 
   try {
     const response = await openai.createChatCompletion({
@@ -35,7 +35,7 @@ export default async function handler(
         {
           role: "system",
           content:
-            "You are a helpful assistant that recommends movies based on songs. Answer as concisely as possible. Always answer only with 5 movies, nothing else.",
+            "You are a helpful assistant that recommends movies based on songs. Please ensure that your recommendations include only movies and not TV shows. Answer as concisely as possible. Always answer only with 5 movies, nothing else.",
         },
         {
           role: "user",
