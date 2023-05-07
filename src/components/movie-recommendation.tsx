@@ -3,6 +3,7 @@ import useTmdbMovieInfo from "~/utils/hooks/use-tmdb-movie-info";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "./movie-recommendations-button";
 import { useEffect, useState } from "react";
+import { v4 as uuid } from "uuid";
 
 // Display the movie recommendations modal with a poster, title, release year, overview and links to TMDB and Letterboxd
 export const MovieModal = ({
@@ -160,9 +161,10 @@ const MovieRecommendations = (movies: { movies: Movie[] }) => {
   return (
     <div className="mt-8 flex flex-col">
       <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
-        {movieList.map((movie) => (
-          <MovieCard key={movie.title} movie={movie} />
-        ))}
+        {movieList.map((movie) => {
+          const uniqueKey = uuid();
+          return <MovieCard key={uniqueKey} movie={movie} />;
+        })}
       </div>
     </div>
   );
