@@ -85,9 +85,17 @@ export default async function handler(
           "There was a problem trying to get your recommendations, please try again",
       });
     } else {
+      // Check if the recommendation has a valid year at the end
+      // This is to filter out TV shows recommendations for example (ex: "Game of Thrones (2011-2019)")
+      function checkIfYearValid(recommendation: string): boolean {
+        const yearPattern = /\(\d{4}\)/;
+        return yearPattern.test(recommendation);
+      }
+
       const movieRecommendations = movieRecommendationsString
         .split("; ")
-        .map((movie) => movie.trim().replace(/\.$/, ""));
+        .map((movie) => movie.trim().replace(/\.$/, ""))
+        .filter(checkIfYearValid);
       res.status(200).json({ movieRecommendations });
     }
   } catch (error: unknown) {
