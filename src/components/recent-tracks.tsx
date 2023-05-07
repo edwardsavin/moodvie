@@ -1,6 +1,7 @@
 import Image from "next/image";
 import useRecentTracks from "~/utils/hooks/use-recent-tracks";
 import FetchMovieRecommendationsButton from "./movie-recommendations-button";
+import { v4 as uuid } from "uuid";
 
 // Display the most recent tracks from the user's Spotify history
 export const RecentTracks = ({
@@ -35,20 +36,23 @@ export const RecentTracks = ({
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="flex flex-row">
-        {trackData.map((track) => (
-          <div className="text-white" key={track.id}>
-            <p>{track.name}</p>
-            <p>{track.artist}</p>
-            <p>{track.album}</p>
-            <Image
-              src={track.image}
-              width={200}
-              height={200}
-              alt={track.name}
-              priority
-            />
-          </div>
-        ))}
+        {trackData.map((track) => {
+          const uniqueKey = uuid();
+          return (
+            <div className="text-white" key={uniqueKey}>
+              <p>{track.name}</p>
+              <p>{track.artist}</p>
+              <p>{track.album}</p>
+              <Image
+                src={track.image}
+                width={200}
+                height={200}
+                alt={track.name}
+                priority
+              />
+            </div>
+          );
+        })}
       </div>
       <FetchMovieRecommendationsButton songsString={songsString} />
     </div>
