@@ -7,6 +7,7 @@ export type MovieInfo = {
   vote_average: number | undefined;
   release_date: string | undefined;
   id: number;
+  message?: string;
 };
 
 // Fetch movie info from TMDB API
@@ -25,6 +26,12 @@ export default async function handler(
     );
 
     const data = (await result.json()) as { results: MovieInfo[] };
+
+    // Handle no result
+    if (data.results.length === 0) {
+      res.status(404).json({ message: "No result found" });
+    }
+
     const movieInfo = data.results[0];
 
     if (movieInfo) {
