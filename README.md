@@ -6,13 +6,17 @@
 
 ### **Get movie recommendations based on your mood and music taste.**
 
-Moodvie that takes your recently listened to songs from Spotify and recommends you movies with the help of AI. The app is built with the T3 stack, which is based on Next.js, tRPC, Tailwind CSS, TypeScript, and Prisma. It also uses Clerk for authentication and the APIs from Spotify, OpenAI (gpt-3.5-turbo), and TMDB. 
+Moodvie takes your recently listened to songs from Spotify and recommends you movies with the help of AI. The app is built with the T3 stack, which is based on Next.js, tRPC, Tailwind CSS, TypeScript, and Prisma. It also uses Clerk for authentication and the APIs from Spotify, OpenAI (gpt-3.5-turbo), and TMDB. 
 
 </div>
 
 ## Moodvie App
 ### [Moodvie 🍿](https://moodvie.edwardcs.com/)
 ![moodvie](https://user-images.githubusercontent.com/9148855/236710559-01377a7a-c219-4969-b41c-e4570c40028e.gif)
+
+## Project Status
+
+Moodvie is currently in the **alpha stage** and under active development. I am constantly working on improving the app and looks. If you have any suggestions or would like to contribute, please refer to the [Contributing](#contributing) section below.
 
 ## Table of Contents
 * [Features](#features)
@@ -95,7 +99,7 @@ npm run dev
 * [tRPC](https://trpc.io/) - End-to-end typesafe APIs made easy
 * [Clerk](https://clerk.dev/) - User authentication and management
 * [Spotify API](https://developer.spotify.com/documentation/web-api/) - Access user's Spotify data
-* [OpenAI API](https://beta.openai.com/docs/) - AI-powered movie recommendations using GPT-3.5 Turbo
+* [OpenAI API](https://platform.openai.com/docs/introduction/) - AI-powered movie recommendations using GPT-3.5 Turbo
 * [TMDB API](https://www.themoviedb.org/documentation/api) - Access movie information and images
 
 ## Contributing <a name="contributing"></a>
