@@ -18,10 +18,7 @@ const Home: NextPage = () => {
           name="description"
           content="Moodvie - Get movie recommendations based on your mood and music taste."
         />
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍿</text></svg>"
-        />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
