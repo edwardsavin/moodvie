@@ -1,28 +1,103 @@
-# Create T3 App
+<div align="center">
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# Moodvie
 
-## What's next? How do I make an app with this?
+[![Moodvie](https://moodvie.edwardcs.com/favicon.ico)](https://moodvie.edwardcs.com/)
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### **Get movie recommendations based on your mood and music taste.**
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+Moodvie that takes your recently listened to songs from Spotify and recommends you movies with the help of AI. The app is built with the T3 stack, which is based on Next.js, tRPC, Tailwind CSS, TypeScript, and Prisma. It also uses Clerk for authentication and the APIs from Spotify, OpenAI (gpt-3.5-turbo), and TMDB. 
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+</div>
 
-## Learn More
+## Moodvie App
+### [Moodvie 🍿](https://moodvie.edwardcs.com/)
+![moodvie](https://user-images.githubusercontent.com/9148855/236710559-01377a7a-c219-4969-b41c-e4570c40028e.gif)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Table of Contents
+* [Features](#features)
+* [Usage](#usage)
+* [Setup project](#setup-project)
+   * [Prerequisites](#prerequisites)
+   * [Installation](#installation)
+* [Built With](#built-with)
+* [Contributing](#contributing)
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Features <a name="features"></a>
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+* Retrieve recently listened to songs from the user's Spotify account
+* Generate movie recommendations based on the user's mood and music taste using OpenAI's GPT-3.5 Turbo
+* Display movie information and images from TMDB
 
-## How do I deploy this?
+## Usage <a name="usage"></a>
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+To use Moodvie, you need to sign in with your Spotify account. Once you're signed in, Moodvie will retrieve your recently listened to tracks and analyze them to determine your mood. Then, it will recommend movies based on your mood.
+
+## App Architecture
+
+The Moodvie app is built with the T3 stack, which is based on Next.js, tRPC, Tailwind CSS, TypeScript, and Prisma. It also uses Clerk for authentication and the APIs from Spotify, OpenAI (gpt-3.5-turbo), and TMDB.
+
+The app consists of the following components:
+
+* **Frontend:** The frontend is built with Next.js and Tailwind CSS. It communicates with the backend via tRPC API calls.
+
+* **Backend:** The backend is built with tRPC, which provides typesafe APIs for the frontend. It communicates with the Spotify, OpenAI, and TMDB APIs to retrieve user data and movie recommendations.
+
+* **Database:** The database is built with Prisma, which provides a typesafe ORM for Node.js and TypeScript.
+
+* **Authentication:** Authentication is handled by Clerk, which provides user authentication and management functionality.
+
+The frontend and backend communicate with each other via tRPC API calls, which ensures type safety and eliminates the need for manual serialization and deserialization. The backend communicates with the various APIs to retrieve user data and movie recommendations, and the results are passed back to the frontend.
+
+Overall, the Moodvie app is a full-stack TypeScript application that utilizes several modern technologies and APIs to provide movie recommendations based on a user's mood and music taste.
+
+## Setup project <a name="setup-project"></a>
+
+### Prerequisites <a name="prerequisites"></a>
+
+* Node.js
+* A Spotify Developer account with a registered app and API credentials
+* An OpenAI API key
+* A TMDB API key
+* Clerk API keys
+
+### Installation <a name="installation"></a>
+
+1. Clone the repository:
+```
+git clone https://github.com/edwardsavin/moodvie.git
+```
+
+2. Install dependencies:
+```
+cd moodvie npm install
+```
+
+3. Copy the `.env.example` file to `.env` and update the environment variables with your API keys and credentials:
+```
+cp .env.example .env
+```
+
+4. Start the development server:
+```
+npm run dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Built With <a name="built-with"></a>
+
+* [create-t3-app](https://github.com/t3-oss/create-t3-app) - Interactive CLI to start a full-stack, typesafe Next.js app
+* [Next.js](https://nextjs.org/) - The React Framework
+* [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
+* [TypeScript](https://www.typescriptlang.org/) - A strongly typed superset of JavaScript
+* [Prisma](https://www.prisma.io/) - Next-generation ORM for Node.js and TypeScript
+* [tRPC](https://trpc.io/) - End-to-end typesafe APIs made easy
+* [Clerk](https://clerk.dev/) - User authentication and management
+* [Spotify API](https://developer.spotify.com/documentation/web-api/) - Access user's Spotify data
+* [OpenAI API](https://beta.openai.com/docs/) - AI-powered movie recommendations using GPT-3.5 Turbo
+* [TMDB API](https://www.themoviedb.org/documentation/api) - Access movie information and images
+
+## Contributing <a name="contributing"></a>
+
+Contributions are welcome! If you find a bug or have a feature request, please open an issue or submit a pull request.
