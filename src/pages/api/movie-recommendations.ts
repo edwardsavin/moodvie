@@ -1,6 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+import { getAuth } from "@clerk/nextjs/server";
 
+const redis = new Redis({
+  url: `${process.env.UPSTASH_REDIS_REST_URL as string}`,
+  token: `${process.env.UPSTASH_REDIS_REST_TOKEN as string}`,
+});
+
+// Rate limit to 5 requests per 3 minutes
+const ratelimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(5, "3 m"),
+});
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -11,6 +24,34 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { songs } = req.body as { songs: string };
+
+  // Rate limit by user id
+  const identifier = getAuth(req).userId;
+  const result = await ratelimit.limit(identifier as string);
+  const remainingRequests = result.remaining;
+  const resetTime = result.reset;
+  const currentTime = Date.now();
+  const remainingTimeInSeconds = Math.ceil((resetTime - currentTime) / 1000);
+
+  // Set the rate limit headers
+  res.setHeader("X-RateLimit-Limit", result.limit);
+  res.setHeader("X-RateLimit-Remaining", remainingRequests);
+  res.setHeader("X-RateLimit-Reset", resetTime);
+  res.setHeader("X-RateLimit-RemainingTime", remainingTimeInSeconds);
+
+  // Show the remaining time in seconds if it's less than 60 seconds, otherwise show the remaining time in minutes
+  const remainingTime =
+    remainingTimeInSeconds < 60
+      ? `${remainingTimeInSeconds} seconds`
+      : `${Math.ceil(remainingTimeInSeconds / 60)} minutes`;
+
+  // If the user has exceeded the rate limit, show an error message
+  if (!result.success) {
+    res.status(500).json({
+      message: `You have exceeded the rate limit. Please try again in ${remainingTime}.`,
+    });
+    throw new Error("Rate limit exceeded");
+  }
 
   const exampleSongs1 =
     "1. Plain Jane by A$AP Ferg; 2. Strazile feat. (Mario V) by B.U.G. Mafia; 3. Poezie De Strada (Radio Edit) - Remix by B.U.G. Mafia; 4. 40 kmh by B.U.G. Mafia; 5. Dead Inside (Interlude) by XXXTENTACION";

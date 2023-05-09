@@ -37,7 +37,7 @@ const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
       setUniqueKey(Date.now());
       setRecommendedMovies(mappedMovies as Movie[]);
     } catch (error) {
-      toast.error("Something went wrong, please try again");
+      toast.error((error as Error).message);
     }
   };
 
