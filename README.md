@@ -63,6 +63,7 @@ Overall, the Moodvie app is a full-stack TypeScript application that utilizes se
 
 * Node.js
 * A Spotify Developer account with a registered app and API credentials
+* An Upstash Redis rest url and token
 * An OpenAI API key
 * A TMDB API key
 * Clerk API keys
