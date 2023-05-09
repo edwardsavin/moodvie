@@ -51,6 +51,8 @@ The app consists of the following components:
 
 * **Authentication:** Authentication is handled by Clerk, which provides user authentication and management functionality.
 
+* **Rate limiting:** To protect the application from potential abuse and ensure fair usage, rate limiting has been implemented using Upstash Redis.
+
 The frontend and backend communicate with each other via tRPC API calls, which ensures type safety and eliminates the need for manual serialization and deserialization. The backend communicates with the various APIs to retrieve user data and movie recommendations, and the results are passed back to the frontend.
 
 Overall, the Moodvie app is a full-stack TypeScript application that utilizes several modern technologies and APIs to provide movie recommendations based on a user's mood and music taste.
@@ -98,9 +100,10 @@ npm run dev
 * [Prisma](https://www.prisma.io/) - Next-generation ORM for Node.js and TypeScript
 * [tRPC](https://trpc.io/) - End-to-end typesafe APIs made easy
 * [Clerk](https://clerk.dev/) - User authentication and management
+* [Upstash](https://upstash.com/) - Serverless Data for Redis® and Kafka®
 * [Spotify API](https://developer.spotify.com/documentation/web-api/) - Access user's Spotify data
 * [OpenAI API](https://platform.openai.com/docs/introduction/) - AI-powered movie recommendations using GPT-3.5 Turbo
-* [TMDB API](https://www.themoviedb.org/documentation/api) - Access movie information and images
+* [TMDB API](https://www.themoviedb.org/documentation/api/) - Access movie information and images
 
 ## Contributing <a name="contributing"></a>
 
