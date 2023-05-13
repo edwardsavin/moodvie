@@ -2,6 +2,8 @@ import Image from "next/image";
 import useRecentTracks from "~/utils/hooks/use-recent-tracks";
 import FetchMovieRecommendationsButton from "./movie-recommendations-button";
 import { v4 as uuid } from "uuid";
+import { api } from "~/utils/api";
+import { useEffect } from "react";
 
 // Display the most recent tracks from the user's Spotify history
 export const RecentTracks = ({
@@ -10,6 +12,23 @@ export const RecentTracks = ({
   spotifyAccessToken: string;
 }) => {
   const trackData = useRecentTracks(spotifyAccessToken);
+
+  const { mutate } = api.song.createMany.useMutation();
+
+  // Create songs in the database
+  useEffect(() => {
+    if (trackData) {
+      mutate({
+        songs: trackData.map((track) => ({
+          spotifyId: track.id,
+          title: track.name,
+          album: track.album,
+          artist: track.artist,
+          cover: track.image,
+        })),
+      });
+    }
+  }, [trackData, mutate]);
 
   if (!trackData)
     return (
