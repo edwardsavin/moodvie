@@ -4,15 +4,11 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getAuth } from "@clerk/nextjs/server";
 
-const redis = new Redis({
-  url: `${process.env.UPSTASH_REDIS_REST_URL as string}`,
-  token: `${process.env.UPSTASH_REDIS_REST_TOKEN as string}`,
-});
-
 // Rate limit to 5 requests per 3 minutes
 const ratelimit = new Ratelimit({
-  redis: redis,
+  redis: Redis.fromEnv(),
   limiter: Ratelimit.slidingWindow(5, "3 m"),
+  analytics: true,
 });
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
