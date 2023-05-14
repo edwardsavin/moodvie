@@ -3,7 +3,6 @@ import useTmdbMovieInfo from "~/utils/hooks/use-tmdb-movie-info";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "./movie-recommendations-button";
 import { useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
 import { api } from "~/utils/api";
 
 // Display the movie recommendations modal with a poster, title, release year, overview and links to TMDB and Letterboxd
@@ -106,41 +105,11 @@ export const MovieModal = ({
 };
 
 // Display the movie recommendations with a poster, title, release year and overview
-export const MovieCard = (movie: { movie: Movie }) => {
-  const movieInfo = useTmdbMovieInfo(
-    movie.movie.title,
-    movie.movie.year
-  ) as MovieInfo;
+export const MovieCard = (movieInfo: MovieInfo) => {
   const [showModal, setShowModal] = useState(false);
-
-  const { mutate } = api.movie.create.useMutation();
 
   const imageWidth = 200;
   const imageHeight = 300;
-
-  // Create the movie in the database when the movie info is fetched
-  useEffect(() => {
-    if (!movieInfo) return;
-
-    let movieCover = null;
-    // If the movie has a poster, use it. Otherwise, use a placeholder
-    if (movieInfo.poster_path) {
-      movieCover = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
-    } else {
-      movieCover = `https://via.placeholder.com/${imageWidth}x${imageHeight}?text=${movieInfo.title}`;
-    }
-
-    mutate({
-      movie: {
-        title: movieInfo.title,
-        cover: movieCover,
-        tmdbId: movieInfo.id,
-        year: parseInt(movie.movie.year) ?? null,
-        overview: movieInfo.overview ?? null,
-        vote_average: movieInfo.vote_average ?? null,
-      },
-    });
-  }, [movieInfo, mutate, movie.movie.year]);
 
   if (!movieInfo) return <div>Loading...</div>;
 
@@ -184,19 +153,53 @@ export const MovieCard = (movie: { movie: Movie }) => {
 
 // Render all aggregated movie recommendations
 const MovieRecommendations = (movies: { movies: Movie[] }) => {
-  const [movieList, setMovieList] = useState<Movie[]>([]);
+  const moviesInfo = useTmdbMovieInfo(
+    movies.movies.map((movie) => movie.title),
+    movies.movies.map((movie) => movie.year)
+  ) as unknown as MovieInfo[];
 
+  const { mutate } = api.movie.createMany.useMutation();
+
+  // Create the movies in the database when the movie info is fetched
   useEffect(() => {
-    setMovieList(movies.movies);
-  }, [movies.movies]);
+    if (!moviesInfo) return;
+
+    const moviesToCreate = moviesInfo.map((movieInfo: MovieInfo) => {
+      let movieCover = null;
+      // If the movie has a poster, use it. Otherwise, use a placeholder
+      if (movieInfo.poster_path) {
+        movieCover = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
+      } else {
+        movieCover = `https://via.placeholder.com/200x300?text=${movieInfo.title}`;
+      }
+
+      let movieYear = null;
+      if (movieInfo.release_date) {
+        movieYear = parseInt(movieInfo.release_date.split("-")[0] as string);
+      }
+
+      return {
+        title: movieInfo.title,
+        cover: movieCover,
+        tmdbId: movieInfo.id,
+        year: movieYear,
+        overview: movieInfo.overview ?? null,
+        vote_average: movieInfo.vote_average ?? null,
+      };
+    });
+
+    mutate({
+      movies: moviesToCreate,
+    });
+  }, [moviesInfo, mutate]);
 
   return (
     <div className="mt-8 flex flex-col">
       <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
-        {movieList.map((movie) => {
-          const uniqueKey = uuid();
-          return <MovieCard key={uniqueKey} movie={movie} />;
-        })}
+        {moviesInfo &&
+          moviesInfo.map((movieInfo: MovieInfo) => {
+            return <MovieCard key={movieInfo.id} {...movieInfo} />;
+          })}
       </div>
     </div>
   );
