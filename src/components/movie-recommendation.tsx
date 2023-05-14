@@ -4,6 +4,7 @@ import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "./movie-recommendations-button";
 import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { api } from "~/utils/api";
 
 // Display the movie recommendations modal with a poster, title, release year, overview and links to TMDB and Letterboxd
 export const MovieModal = ({
@@ -112,6 +113,35 @@ export const MovieCard = (movie: { movie: Movie }) => {
   ) as MovieInfo;
   const [showModal, setShowModal] = useState(false);
 
+  const { mutate } = api.movie.create.useMutation();
+
+  const imageWidth = 200;
+  const imageHeight = 300;
+
+  // Create the movie in the database when the movie info is fetched
+  useEffect(() => {
+    if (!movieInfo) return;
+
+    let movieCover = null;
+    // If the movie has a poster, use it. Otherwise, use a placeholder
+    if (movieInfo.poster_path) {
+      movieCover = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
+    } else {
+      movieCover = `https://via.placeholder.com/${imageWidth}x${imageHeight}?text=${movieInfo.title}`;
+    }
+
+    mutate({
+      movie: {
+        title: movieInfo.title,
+        cover: movieCover,
+        tmdbId: movieInfo.id,
+        year: parseInt(movie.movie.year) ?? null,
+        overview: movieInfo.overview ?? null,
+        vote_average: movieInfo.vote_average ?? null,
+      },
+    });
+  }, [movieInfo, mutate, movie.movie.year]);
+
   if (!movieInfo) return <div>Loading...</div>;
 
   if (movieInfo.message === "No result found") return null;
@@ -136,8 +166,8 @@ export const MovieCard = (movie: { movie: Movie }) => {
             movieInfo.poster_path as string
           }`}
           alt={movieInfo.title}
-          width={200}
-          height={200}
+          width={imageWidth}
+          height={imageHeight}
           priority
         />
       </div>
