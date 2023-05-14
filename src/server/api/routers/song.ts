@@ -26,14 +26,16 @@ export const songRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const song = await prisma.song.create({
-        data: {
+      const song = await prisma.song.upsert({
+        where: { spotifyId: input.song.spotifyId },
+        create: {
           spotifyId: input.song.spotifyId,
           title: input.song.title,
           album: input.song.album,
           artist: input.song.artist,
           cover: input.song.cover,
         },
+        update: {},
       });
       return song;
     }),
@@ -53,9 +55,15 @@ export const songRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const songs = await prisma.song.createMany({
-        data: input.songs,
-      });
+      const songs = await Promise.all(
+        input.songs.map(async (song) => {
+          return await prisma.song.upsert({
+            where: { spotifyId: song.spotifyId },
+            create: song,
+            update: {},
+          });
+        })
+      );
       return songs;
     }),
 });
