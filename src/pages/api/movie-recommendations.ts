@@ -55,6 +55,8 @@ export default async function handler(
     "1. Gherila PTM by B.U.G. Mafia; 2. Estu' Salbatic by B.U.G. Mafia; 3. Billie Jean by Michael Jackson; 4. The Time (Dirty Bit) by The Black Eyed Peas; 5. Beautiful Liar by Beyoncé";
   const exampleSongs3 =
     "1. What's Luv? (feat. Ashanti) by Fat Joe; 2. The Crack Attack by Fat Joe; 3. What's Luv? (feat. Ashanti) by Fat Joe; 4. TiK ToK by Kesha; 5. What's Luv? (feat. Ashanti) by Fat Joe";
+  const exampleSongs4 =
+    "1. 01000111 00110010 01000111 00101110 by OmenXIII; 2. NOT ENOUGH MANA by HAARPER; 3. Satanic Panic by Bleed The Wicked Menace; 4. Download My Conscious by Faceless 1-7; 5. Tha Dog Pound by 99zed";
 
   const exampleResponse1 =
     "Project X (2012); City of God (2002); Scarface (1983); The Fast and the Furious (2001); Fight Club (1999)";
@@ -62,8 +64,10 @@ export default async function handler(
     "The Godfather (1972); Training Day (2001); Moonwalker (1988); The Hangover (2009); Crazy Rich Asians (2018).";
   const exampleResponse3 =
     "Bad Boys II (2003); Carlito's Way (1993); 8 Mile (2002); The Hangover (2009); Love & Basketball (2000)";
+  const exampleResponse4 =
+    "The Matrix (1999); Jubilee (1978); Rosemary's Baby (1968); Inception (2010); Training Day (2001)";
 
-  const examplePrompt = `Recommend me 5 movies based on these 5 songs:${exampleSongs1} You should respond in one single line only with the name of the movies (and year in parentheses), separated by a semicolon and a space, nothing else. Please ensure that your recommendations include only movies and not TV shows.`;
+  const examplePrompt = `Recommend me 5 movies based on these 5 songs:${exampleSongs1} You should respond in one single line only with the name of the movies (and year in parentheses), separated by a semicolon and a space, nothing else. Please ensure that your recommendations include only movies and not TV shows. In case that some songs are not popular enough just recommend movies based on just the name of the songs, they do not have to be accurate. If the names of the songs doesn't help, just recommend random movies.`;
 
   try {
     const response = await openai.createChatCompletion({
@@ -72,7 +76,7 @@ export default async function handler(
         {
           role: "system",
           content:
-            "You are a helpful assistant that recommends movies based on songs. Please ensure that your recommendations include only movies and not TV shows. Answer as concisely as possible. Always answer only with 5 movies, nothing else.",
+            "You are a helpful assistant that recommends movies based on songs. Please ensure that your recommendations include only movies and not TV shows. Answer as concisely as possible. Always answer only with 5 movies, nothing else. In case that some songs are not popular enough just recommend movies based on just the name of the songs, they do not have to be accurate. If the names of the songs doesn't help, just recommend random movies.",
         },
         {
           role: "user",
@@ -100,11 +104,19 @@ export default async function handler(
         },
         {
           role: "user",
+          content: exampleSongs4,
+        },
+        {
+          role: "assistant",
+          content: exampleResponse4,
+        },
+        {
+          role: "user",
           content: songs,
         },
       ],
       temperature: 0.5,
-      max_tokens: 101,
+      max_tokens: 1001,
     });
 
     if (!response.data.choices[0]?.message)
@@ -118,8 +130,7 @@ export default async function handler(
 
     if (!movieRecommendationsString.includes(";")) {
       res.status(500).json({
-        message:
-          "There was a problem trying to get your recommendations, please try again",
+        message: response.data.choices[0].message.content.trim(),
       });
     } else {
       // Check if the recommendation has a valid year at the end
