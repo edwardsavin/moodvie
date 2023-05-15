@@ -3,7 +3,7 @@ import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 import superjson from "superjson";
 
-export const generateSSGHelper = () =>
+export const generateSSRHelper = () =>
   createServerSideHelpers({
     router: appRouter,
     ctx: { prisma, userId: null },

@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { generateSSGHelper } from "../helpers/ssgHelper";
+import { generateSSRHelper } from "../helpers/ssrHelper";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import Link from "next/link";
@@ -87,7 +87,7 @@ const History: NextPage = () => {
   );
 };
 export const getServerSideProps: GetServerSideProps = async () => {
-  const ssr = generateSSGHelper();
+  const ssr = generateSSRHelper();
 
   await ssr.recommendation.getAllByUserId.prefetch();
 
