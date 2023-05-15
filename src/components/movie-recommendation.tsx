@@ -206,11 +206,17 @@ export const MovieRecommendations = ({
       },
       {
         onSettled: () => {
-          mutateRecommendation({
-            id: recommendationId,
-            moviesIds: moviesToCreate.map((movie) => movie.tmdbId),
-          });
-          mutateDeleteEmptyRecommendations();
+          mutateRecommendation(
+            {
+              id: recommendationId,
+              moviesIds: moviesToCreate.map((movie) => movie.tmdbId),
+            },
+            {
+              onSettled: () => {
+                mutateDeleteEmptyRecommendations();
+              },
+            }
+          );
         },
       }
     );
