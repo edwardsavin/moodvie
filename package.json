@@ -1,6 +1,6 @@
 {
   "name": "moodvie",
-  "version": "0.11.0",
+  "version": "0.12.1",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.16.4",
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^4.14.0",
     "@tanstack/react-query": "^4.28.0",
     "@trpc/client": "^10.18.0",
     "@trpc/next": "^10.18.0",
@@ -44,7 +44,7 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.6",
     "prettier-plugin-tailwindcss": "^0.2.6",
-    "prisma": "^4.11.0",
+    "prisma": "^4.14.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.0.2"
   },

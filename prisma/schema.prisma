@@ -11,8 +11,63 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Example {
+model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  name            String
+  profilePicture  String
+  userId          String           @unique
+  role            Role             @default(USER)
+  recommendations Recommendation[]
+
+  @@index([userId])
+}
+
+model Song {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  spotifyId       String           @unique
+  title           String           @db.VarChar(300)
+  artist          String
+  album           String?
+  cover           String?
+  recommendations Recommendation[]
+
+  @@index([spotifyId])
+}
+
+model Movie {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  tmdbId          Int              @unique
+  title           String           @db.VarChar(255)
+  year            Int?             @db.UnsignedSmallInt
+  cover           String?
+  overview        String?          @db.VarChar(1000)
+  vote_average    Float?
+  recommendations Recommendation[]
+
+  @@index([tmdbId])
+}
+
+model Recommendation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  songs  Song[]
+  movies Movie[]
+  userId String
+  user   User    @relation(fields: [userId], references: [userId])
+
+  @@index([userId])
+}
+
+enum Role {
+  USER
+  PREMIUM_USER
+  ADMIN
 }

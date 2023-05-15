@@ -15,28 +15,49 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const movieName = req.query.movieName as string;
-  const movieYear = req.query.movieYear as string;
+  const names = req.query.movieNames as string;
+  const years = req.query.movieYears as string;
+
+  // Remove suffix from movie names
+  const movieNames = names.split(",").map((name) => {
+    return name.replace(" ADDEDSUFFIX", "");
+  });
+  const movieYears = years.split(",");
 
   try {
-    const result = await fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${
-        process.env.TMDB_API_KEY as string
-      }&language=en-US&query=${movieName}&page=1&include_adult=false&year=${movieYear}`
+    const moviePromises = movieNames.map(
+      async (movieName: string, index: number) => {
+        const movieYear = movieYears[index];
+
+        const response = await fetch(
+          `https://api.themoviedb.org/3/search/movie?api_key=${
+            process.env.TMDB_API_KEY as string
+          }&language=en-US&query=${movieName}&page=1&include_adult=false&year=${
+            movieYear as string
+          }`
+        );
+
+        return response.json();
+      }
     );
 
-    const data = (await result.json()) as { results: MovieInfo[] };
+    const movieDataList = await Promise.all(moviePromises);
 
-    // Handle no result
-    if (data.results.length === 0) {
-      res.status(404).json({ message: "No result found" });
-    }
+    const movieInfoList: (MovieInfo | { message: string })[] =
+      movieDataList.map((data: { results: MovieInfo[] }) => {
+        if (data.results.length === 0) {
+          return { message: "No result found" };
+        }
+        return data.results[0] as MovieInfo;
+      });
 
-    const movieInfo = data.results[0];
+    const filteredMovieInfoList: MovieInfo[] = movieInfoList.filter(
+      (item): item is MovieInfo => {
+        return !("message" in item);
+      }
+    );
 
-    if (movieInfo) {
-      res.status(200).json(movieInfo);
-    }
+    res.status(200).json(filteredMovieInfoList);
   } catch (error: unknown) {
     res.status(500).json({ message: (error as Error).message });
   }

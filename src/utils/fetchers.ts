@@ -26,13 +26,14 @@ export const fetchTracks = async (url: string, token: string) => {
 // Fetch info about movie from TMDB API
 export const fetchMovieInfo = async (
   url: string,
-  movieTitle: string,
-  movieYear: string
+  movieTitles: string,
+  movieYears: string
 ) => {
   const res = await fetch(
-    `${url}?movieName=${movieTitle}&movieYear=${movieYear}`
+    `${url}?movieNames=${movieTitles}&movieYears=${movieYears}`
   );
-  const data = (await res.json()) as MovieInfo;
+
+  const data = (await res.json()) as MovieInfo[];
 
   return data;
 };

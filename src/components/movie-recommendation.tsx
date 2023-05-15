@@ -3,7 +3,7 @@ import useTmdbMovieInfo from "~/utils/hooks/use-tmdb-movie-info";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "./movie-recommendations-button";
 import { useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
+import { api } from "~/utils/api";
 
 // Display the movie recommendations modal with a poster, title, release year, overview and links to TMDB and Letterboxd
 export const MovieModal = ({
@@ -105,12 +105,11 @@ export const MovieModal = ({
 };
 
 // Display the movie recommendations with a poster, title, release year and overview
-export const MovieCard = (movie: { movie: Movie }) => {
-  const movieInfo = useTmdbMovieInfo(
-    movie.movie.title,
-    movie.movie.year
-  ) as MovieInfo;
+export const MovieCard = (movieInfo: MovieInfo) => {
   const [showModal, setShowModal] = useState(false);
+
+  const imageWidth = 200;
+  const imageHeight = 300;
 
   if (!movieInfo) return <div>Loading...</div>;
 
@@ -136,8 +135,8 @@ export const MovieCard = (movie: { movie: Movie }) => {
             movieInfo.poster_path as string
           }`}
           alt={movieInfo.title}
-          width={200}
-          height={200}
+          width={imageWidth}
+          height={imageHeight}
           priority
         />
       </div>
@@ -152,21 +151,84 @@ export const MovieCard = (movie: { movie: Movie }) => {
   );
 };
 
-// Render all aggregated movie recommendations
-const MovieRecommendations = (movies: { movies: Movie[] }) => {
-  const [movieList, setMovieList] = useState<Movie[]>([]);
+type MovieRecommendationsProps = {
+  movies: Movie[];
+  recommendationId: string;
+};
 
+// Render all aggregated movie recommendations
+export const MovieRecommendations = ({
+  movies,
+  recommendationId,
+}: MovieRecommendationsProps) => {
+  const moviesInfo = useTmdbMovieInfo(
+    movies.map((movie) => movie.title),
+    movies.map((movie) => movie.year)
+  ) as unknown as MovieInfo[];
+
+  const { mutate: mutateMovies } = api.movie.createMany.useMutation();
+  const { mutate: mutateRecommendation } =
+    api.recommendation.update.useMutation();
+  const { mutate: mutateDeleteEmptyRecommendations } =
+    api.recommendation.deleteEmpty.useMutation();
+
+  // Create the movies in the database when the movie info is fetched
   useEffect(() => {
-    setMovieList(movies.movies);
-  }, [movies.movies]);
+    if (!moviesInfo) return;
+
+    const moviesToCreate = moviesInfo.map((movieInfo: MovieInfo) => {
+      // If the movie has a poster, use it. Otherwise, use a placeholder
+      let movieCover = null;
+      if (movieInfo.poster_path) {
+        movieCover = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
+      } else {
+        movieCover = `https://via.placeholder.com/200x300?text=${movieInfo.title}`;
+      }
+
+      let movieYear = null;
+      if (movieInfo.release_date) {
+        movieYear = parseInt(movieInfo.release_date.split("-")[0] as string);
+      }
+
+      return {
+        title: movieInfo.title,
+        cover: movieCover,
+        tmdbId: movieInfo.id,
+        year: movieYear,
+        overview: movieInfo.overview ?? null,
+        vote_average: movieInfo.vote_average ?? null,
+      };
+    });
+
+    mutateMovies(
+      {
+        movies: moviesToCreate,
+      },
+      {
+        onSettled: () => {
+          mutateRecommendation({
+            id: recommendationId,
+            moviesIds: moviesToCreate.map((movie) => movie.tmdbId),
+          });
+          mutateDeleteEmptyRecommendations();
+        },
+      }
+    );
+  }, [
+    moviesInfo,
+    mutateMovies,
+    mutateRecommendation,
+    mutateDeleteEmptyRecommendations,
+    recommendationId,
+  ]);
 
   return (
     <div className="mt-8 flex flex-col">
       <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
-        {movieList.map((movie) => {
-          const uniqueKey = uuid();
-          return <MovieCard key={uniqueKey} movie={movie} />;
-        })}
+        {moviesInfo &&
+          moviesInfo.map((movieInfo: MovieInfo) => {
+            return <MovieCard key={movieInfo.id} {...movieInfo} />;
+          })}
       </div>
     </div>
   );
