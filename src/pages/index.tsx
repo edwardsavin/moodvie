@@ -1,6 +1,7 @@
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { RecentTracks } from "~/components/recent-tracks";
 import SignInSpotifyButton from "~/components/signin-spotify";
 import useSpotifyAccessToken from "~/utils/hooks/use-spotify-access-token";
@@ -22,6 +23,11 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+        <div>
+          <Link href="/history" className="text-white">
+            History
+          </Link>
+        </div>
         <div>
           {!user.isSignedIn && <SignInSpotifyButton />}
           {user.isSignedIn && <SignOutButton />}

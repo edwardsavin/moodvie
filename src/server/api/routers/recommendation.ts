@@ -8,7 +8,10 @@ export const recommendationRouter = createTRPCRouter({
   getAllByUserId: privateProcedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
     const recommendations = await prisma.recommendation.findMany({
-      where: { userId },
+      where: { userId, movies: { some: {} } },
+      include: { songs: true, movies: true },
+      take: 7,
+      orderBy: { createdAt: "desc" },
     });
     return recommendations;
   }),
