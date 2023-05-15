@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { generateSSRHelper } from "../helpers/ssrHelper";
+import { generateSSRHelper } from "~/server/helpers/ssrHelper";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import Link from "next/link";
