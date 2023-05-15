@@ -20,7 +20,9 @@ export default async function handler(
 
   await prisma.user.create({
     data: {
-      name: `${data.first_name} ${data.last_name}`,
+      name: data.last_name
+        ? `${data.first_name} ${data.last_name}`
+        : data.first_name,
       userId: data.id,
       profilePicture: data.image_url,
       role: "USER",
