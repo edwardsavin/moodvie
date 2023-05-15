@@ -55,8 +55,20 @@ export const songRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
+      // Remove duplicates based on spotifyId
+      const uniqueSongsMap = input.songs.reduce((map, song) => {
+        if (!map.has(song.spotifyId)) {
+          map.set(song.spotifyId, song);
+        }
+        return map;
+      }, new Map());
+
+      const uniqueSongs = Array.from(
+        uniqueSongsMap.values()
+      ) as typeof input.songs;
+
       const songs = await Promise.all(
-        input.songs.map(async (song) => {
+        uniqueSongs.map(async (song) => {
           return await prisma.song.upsert({
             where: { spotifyId: song.spotifyId },
             create: song,
