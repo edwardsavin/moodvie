@@ -169,6 +169,8 @@ export const MovieRecommendations = ({
   const { mutate: mutateMovies } = api.movie.createMany.useMutation();
   const { mutate: mutateRecommendation } =
     api.recommendation.update.useMutation();
+  const { mutate: mutateDeleteEmptyRecommendations } =
+    api.recommendation.deleteEmpty.useMutation();
 
   // Create the movies in the database when the movie info is fetched
   useEffect(() => {
@@ -208,10 +210,17 @@ export const MovieRecommendations = ({
             id: recommendationId,
             moviesIds: moviesToCreate.map((movie) => movie.tmdbId),
           });
+          mutateDeleteEmptyRecommendations();
         },
       }
     );
-  }, [moviesInfo, mutateMovies, mutateRecommendation, recommendationId]);
+  }, [
+    moviesInfo,
+    mutateMovies,
+    mutateRecommendation,
+    mutateDeleteEmptyRecommendations,
+    recommendationId,
+  ]);
 
   return (
     <div className="mt-8 flex flex-col">

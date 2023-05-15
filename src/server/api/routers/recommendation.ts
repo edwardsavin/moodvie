@@ -90,4 +90,12 @@ export const recommendationRouter = createTRPCRouter({
 
       return recommendation;
     }),
+
+  deleteEmpty: privateProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.userId;
+    const deletedRecommendations = await prisma.recommendation.deleteMany({
+      where: { userId, movies: { none: {} } },
+    });
+    return deletedRecommendations;
+  }),
 });
