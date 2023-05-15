@@ -2,20 +2,31 @@ import { toast } from "react-hot-toast";
 import getMovieRecommendations from "~/utils/get-movie-recommendations";
 import { useState } from "react";
 import MovieRecommendations from "./movie-recommendation";
+import { api } from "~/utils/api";
+import type { TrackData } from "~/utils/hooks/use-recent-tracks";
 
 export type Movie = {
   title: string;
   year: string;
 };
 
+type Props = {
+  songs: string;
+  trackData: TrackData;
+};
+
 // Start fetching movie recommendations based on the user's Spotify history
-const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
+const FetchMovieRecommendationsButton = ({ songs, trackData }: Props) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
   const [uniqueKey, setUniqueKey] = useState<number>(Date.now());
 
+  const [recommendationId, setRecommendationId] = useState<string | null>(null);
+  const { mutate: mutateRecommendation } =
+    api.recommendation.create.useMutation();
+
   const handleClick = async () => {
     try {
-      let movies = await getMovieRecommendations(songs.songsString);
+      let movies = await getMovieRecommendations(songs);
 
       // Check if response matches expected template
       const regex = /^\d+\.\s/;
@@ -36,6 +47,18 @@ const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
       // Set unique key to force re-render of MovieRecommendations component
       setUniqueKey(Date.now());
       setRecommendedMovies(mappedMovies as Movie[]);
+
+      mutateRecommendation(
+        {
+          songsIds: trackData.map((track) => track.id),
+          moviesIds: null,
+        },
+        {
+          onSuccess: (data) => {
+            setRecommendationId(data.id);
+          },
+        }
+      );
     } catch (error) {
       toast.error((error as Error).message);
     }
@@ -49,8 +72,12 @@ const FetchMovieRecommendationsButton = (songs: { songsString: string }) => {
       >
         Get movie recommendations
       </button>
-      {recommendedMovies.length > 0 && (
-        <MovieRecommendations key={uniqueKey} movies={recommendedMovies} />
+      {recommendedMovies.length > 0 && recommendationId && (
+        <MovieRecommendations
+          key={uniqueKey}
+          movies={recommendedMovies}
+          recommendationId={recommendationId}
+        />
       )}
     </>
   );

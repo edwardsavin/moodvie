@@ -151,22 +151,32 @@ export const MovieCard = (movieInfo: MovieInfo) => {
   );
 };
 
+type MovieRecommendationsProps = {
+  movies: Movie[];
+  recommendationId: string;
+};
+
 // Render all aggregated movie recommendations
-const MovieRecommendations = (movies: { movies: Movie[] }) => {
+export const MovieRecommendations = ({
+  movies,
+  recommendationId,
+}: MovieRecommendationsProps) => {
   const moviesInfo = useTmdbMovieInfo(
-    movies.movies.map((movie) => movie.title),
-    movies.movies.map((movie) => movie.year)
+    movies.map((movie) => movie.title),
+    movies.map((movie) => movie.year)
   ) as unknown as MovieInfo[];
 
-  const { mutate } = api.movie.createMany.useMutation();
+  const { mutate: mutateMovies } = api.movie.createMany.useMutation();
+  const { mutate: mutateRecommendation } =
+    api.recommendation.update.useMutation();
 
   // Create the movies in the database when the movie info is fetched
   useEffect(() => {
     if (!moviesInfo) return;
 
     const moviesToCreate = moviesInfo.map((movieInfo: MovieInfo) => {
-      let movieCover = null;
       // If the movie has a poster, use it. Otherwise, use a placeholder
+      let movieCover = null;
       if (movieInfo.poster_path) {
         movieCover = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
       } else {
@@ -188,10 +198,20 @@ const MovieRecommendations = (movies: { movies: Movie[] }) => {
       };
     });
 
-    mutate({
-      movies: moviesToCreate,
-    });
-  }, [moviesInfo, mutate]);
+    mutateMovies(
+      {
+        movies: moviesToCreate,
+      },
+      {
+        onSettled: () => {
+          mutateRecommendation({
+            id: recommendationId,
+            moviesIds: moviesToCreate.map((movie) => movie.tmdbId),
+          });
+        },
+      }
+    );
+  }, [moviesInfo, mutateMovies, mutateRecommendation, recommendationId]);
 
   return (
     <div className="mt-8 flex flex-col">

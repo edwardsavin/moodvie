@@ -11,7 +11,7 @@ type Track = {
   image: string;
 };
 
-type TrackData = Track[] & { message?: string };
+export type TrackData = Track[] & { message?: string };
 
 // Fetch user's recent tracks from Spotify history
 const useRecentTracks = (spotifyAccessToken: string) => {

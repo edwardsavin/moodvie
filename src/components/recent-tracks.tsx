@@ -73,7 +73,12 @@ export const RecentTracks = ({
           );
         })}
       </div>
-      <FetchMovieRecommendationsButton songsString={songsString} />
+      {trackData.length > 0 && (
+        <FetchMovieRecommendationsButton
+          songs={songsString}
+          trackData={trackData}
+        />
+      )}
     </div>
   );
 };
