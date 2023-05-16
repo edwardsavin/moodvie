@@ -20,13 +20,20 @@ const FetchMovieRecommendationsButton = ({ songs, trackData }: Props) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
   const [uniqueKey, setUniqueKey] = useState<number>(Date.now());
 
+  const minTemperature = 0.5;
+  const maxTemperature = 1.5;
+  const [temperature, setTemperature] = useState<number>(minTemperature);
+
   const [recommendationId, setRecommendationId] = useState<string | null>(null);
   const { mutate: mutateRecommendation } =
     api.recommendation.create.useMutation();
 
   const handleClick = async () => {
     try {
-      let movies = await getMovieRecommendations(songs);
+      let movies = await getMovieRecommendations(songs, temperature);
+
+      // Increase temperature on each request to get more diverse results
+      if (temperature < maxTemperature) setTemperature(temperature + 0.25);
 
       // Check if response matches expected template
       const regex = /^\d+\.\s/;

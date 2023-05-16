@@ -15,6 +15,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { songs } = req.body as { songs: string };
+  const { temperature: currentTemperature } = req.body as {
+    temperature: number;
+  };
 
   // Limit the number of recommendations based on the user's role
   const identifier = getAuth(req).userId;
@@ -137,7 +140,7 @@ export default async function handler(
           content: songs,
         },
       ],
-      temperature: 0.5,
+      temperature: currentTemperature,
       max_tokens: 1001,
     });
 
