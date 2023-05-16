@@ -4,8 +4,11 @@
  */
 await import("./src/env.mjs");
 
+// Axiom web vitals
+import { withAxiom } from "next-axiom";
+
 /** @type {import("next").NextConfig} */
-const config = {
+const config = withAxiom({
   reactStrictMode: true,
 
   /**
@@ -39,5 +42,5 @@ const config = {
     ignoreDuringBuilds: true,
   },
   swcMinify: true,
-};
+});
 export default config;
