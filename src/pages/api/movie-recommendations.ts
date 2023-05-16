@@ -3,13 +3,8 @@ import { Configuration, OpenAIApi } from "openai";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getAuth } from "@clerk/nextjs/server";
+import { prisma } from "~/server/db";
 
-// Rate limit to 5 requests per 3 minutes
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "3 m"),
-  analytics: true,
-});
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -21,8 +16,35 @@ export default async function handler(
 ) {
   const { songs } = req.body as { songs: string };
 
-  // Rate limit by user id
+  // Limit the number of recommendations based on the user's role
   const identifier = getAuth(req).userId;
+  const userRole = await prisma.user.findUnique({
+    where: { userId: getAuth(req).userId as string },
+  });
+
+  let limit = 5;
+
+  switch (userRole?.role) {
+    case "ADMIN":
+      limit = 50;
+      break;
+
+    case "PREMIUM_USER":
+      limit = 20;
+      break;
+
+    case "USER":
+      limit = 5;
+      break;
+  }
+
+  const ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(limit, "3 m"),
+    analytics: true,
+  });
+
+  // Rate limit by user id
   const result = await ratelimit.limit(identifier as string);
   const remainingRequests = result.remaining;
   const resetTime = result.reset;
