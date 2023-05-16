@@ -1,10 +1,13 @@
-export default async function getMovieRecommendations(songs: string) {
+export default async function getMovieRecommendations(
+  songs: string,
+  temperature: number
+) {
   const response = await fetch("./api/movie-recommendations", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ songs }),
+    body: JSON.stringify({ songs, temperature }),
   });
 
   if (!response.ok) {
