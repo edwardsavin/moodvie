@@ -39,7 +39,9 @@ export default async function handler(
         artist: track.artists?.[0]?.name ?? "Unknown Artist",
         id: track.id,
         album: track.album.name ?? "Unknown Album",
-        image: track.album.images?.[0]?.url ?? "default-image-url", // TODO: Add default image
+        image:
+          track.album.images?.[0]?.url ??
+          `https://via.placeholder.com/200x300?text=${track.name}`,
       };
     });
 
