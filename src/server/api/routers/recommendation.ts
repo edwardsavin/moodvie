@@ -1,8 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
+import {
+  createRecommendationSchema,
+  getRecommendationByIdSchema,
+  updateRecommendationSchema,
+} from "~/server/helpers/recommendation-router-helper";
 
 export const recommendationRouter = createTRPCRouter({
   getAllByUserId: privateProcedure.query(async ({ ctx }) => {
@@ -17,7 +20,7 @@ export const recommendationRouter = createTRPCRouter({
   }),
 
   getRecommendationById: privateProcedure
-    .input(z.object({ id: z.string() }))
+    .input(getRecommendationByIdSchema)
     .query(async ({ input }) => {
       const recommendation = await prisma.recommendation.findUnique({
         where: { id: input.id },
@@ -26,32 +29,19 @@ export const recommendationRouter = createTRPCRouter({
     }),
 
   create: privateProcedure
-    .input(
-      z.object({
-        songsIds: z.array(z.string()),
-        moviesIds: z.nullable(z.array(z.number())),
-      })
-    )
+    .input(createRecommendationSchema)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.userId;
       const songs = await prisma.song.findMany({
         where: { spotifyId: { in: input.songsIds } },
       });
 
-      if (input.moviesIds === null) {
-        const recommendation = await prisma.recommendation.create({
-          data: {
-            userId,
-            songs: { connect: songs.map((song) => ({ id: song.id })) },
-            movies: { connect: [] },
-          },
-        });
-        return recommendation;
-      }
+      const movies = input.moviesIds
+        ? await prisma.movie.findMany({
+            where: { tmdbId: { in: input.moviesIds } },
+          })
+        : [];
 
-      const movies = await prisma.movie.findMany({
-        where: { tmdbId: { in: input.moviesIds } },
-      });
       const recommendation = await prisma.recommendation.create({
         data: {
           userId,
@@ -59,16 +49,12 @@ export const recommendationRouter = createTRPCRouter({
           movies: { connect: movies.map((movie) => ({ id: movie.id })) },
         },
       });
+
       return recommendation;
     }),
 
   update: privateProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        moviesIds: z.array(z.number()),
-      })
-    )
+    .input(updateRecommendationSchema)
     .mutation(async ({ input }) => {
       const movies = await prisma.movie.findMany({
         where: { tmdbId: { in: input.moviesIds } },
