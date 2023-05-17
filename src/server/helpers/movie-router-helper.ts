@@ -1,4 +1,3 @@
-import type { Movie, PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 export const movieSchema = z.object({
@@ -17,14 +16,3 @@ export const getMovieByIdSchema = z.object({
 export const createManyMoviesSchema = z.object({
   movies: z.array(movieSchema),
 });
-
-export const upsertMovie = async (
-  prisma: PrismaClient,
-  movie: Movie
-): Promise<Movie> => {
-  return await prisma.movie.upsert({
-    where: { tmdbId: movie.tmdbId },
-    create: movie,
-    update: {},
-  });
-};

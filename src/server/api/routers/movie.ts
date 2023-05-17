@@ -1,4 +1,3 @@
-import type { Movie } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
@@ -6,7 +5,6 @@ import {
   createManyMoviesSchema,
   getMovieByIdSchema,
   movieSchema,
-  upsertMovie,
 } from "~/server/helpers/movie-router-helper";
 
 export const movieRouter = createTRPCRouter({
@@ -26,18 +24,24 @@ export const movieRouter = createTRPCRouter({
   create: privateProcedure
     .input(z.object({ movie: movieSchema }))
     .mutation(async ({ input }) => {
-      const movie = await upsertMovie(prisma, input.movie as Movie);
+      const movie = await prisma.movie.upsert({
+        where: { tmdbId: input.movie.tmdbId },
+        create: input.movie,
+        update: {},
+      });
       return movie;
     }),
 
   createMany: privateProcedure
     .input(createManyMoviesSchema)
     .mutation(async ({ input }) => {
-      const movies = await Promise.all(
-        input.movies.map(async (movie) => {
-          return await upsertMovie(prisma, movie as Movie);
-        })
-      );
+      await prisma.movie.createMany({
+        data: input.movies,
+        skipDuplicates: true,
+      });
+      const movies = await prisma.movie.findMany({
+        where: { tmdbId: { in: input.movies.map((movie) => movie.tmdbId) } },
+      });
       return movies;
     }),
 });
