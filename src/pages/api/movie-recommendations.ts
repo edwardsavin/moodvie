@@ -1,8 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
 import { getAuth } from "@clerk/nextjs/server";
-import { prisma } from "~/server/db";
 import handleRateLimiting from "~/utils/rate-limiter";
+import { Redis } from "@upstash/redis";
+
+// Get the user's role from Redis
+const getRoleFromCache = async (
+  userId: string
+): Promise<string | undefined> => {
+  const redis = Redis.fromEnv();
+  const role = await redis.get(userId);
+  return role as string | undefined;
+};
 
 // Get the limit based on the user's role
 const getLimitByRole = (role: string | undefined): number => {
@@ -29,10 +38,8 @@ export default async function handler(
 
   // Limit the number of recommendations based on the user's role
   const identifier = getAuth(req).userId as string;
-  const userRole = await prisma.user.findUnique({
-    where: { userId: getAuth(req).userId as string },
-  });
-  const limit = getLimitByRole(userRole?.role);
+  const userRole = await getRoleFromCache(identifier);
+  const limit = getLimitByRole(userRole);
 
   const exampleSongs1 =
     "1. Plain Jane by A$AP Ferg; 2. Strazile feat. (Mario V) by B.U.G. Mafia; 3. Poezie De Strada (Radio Edit) - Remix by B.U.G. Mafia; 4. 40 kmh by B.U.G. Mafia; 5. Dead Inside (Interlude) by XXXTENTACION";
