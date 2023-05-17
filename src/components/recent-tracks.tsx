@@ -1,9 +1,21 @@
-import Image from "next/image";
 import useRecentTracks from "~/utils/hooks/use-recent-tracks";
 import FetchMovieRecommendationsButton from "./movie-recommendations-button";
 import { v4 as uuid } from "uuid";
 import { api } from "~/utils/api";
 import { useEffect } from "react";
+import type { TrackData } from "~/utils/hooks/use-recent-tracks";
+import TrackItem from "./track-item";
+
+// Prepare the data to be sent to the backend
+const transformTrackData = (tracks: TrackData) => {
+  return tracks.map((track) => ({
+    spotifyId: track.id,
+    title: track.name,
+    album: track.album,
+    artist: track.artist,
+    cover: track.image,
+  }));
+};
 
 // Display the most recent tracks from the user's Spotify history
 export const RecentTracks = ({
@@ -17,17 +29,7 @@ export const RecentTracks = ({
 
   // Create songs in the database
   useEffect(() => {
-    if (trackData) {
-      mutate({
-        songs: trackData.map((track) => ({
-          spotifyId: track.id,
-          title: track.name,
-          album: track.album,
-          artist: track.artist,
-          cover: track.image,
-        })),
-      });
-    }
+    if (trackData) mutate({ songs: transformTrackData(trackData) });
   }, [trackData, mutate]);
 
   if (!trackData)
@@ -55,23 +57,9 @@ export const RecentTracks = ({
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="flex flex-row">
-        {trackData.map((track) => {
-          const uniqueKey = uuid();
-          return (
-            <div className="text-white" key={uniqueKey}>
-              <p>{track.name}</p>
-              <p>{track.artist}</p>
-              <p>{track.album}</p>
-              <Image
-                src={track.image}
-                width={200}
-                height={200}
-                alt={track.name}
-                priority
-              />
-            </div>
-          );
-        })}
+        {trackData.map((track) => (
+          <TrackItem key={uuid()} track={track} />
+        ))}
       </div>
       {trackData.length > 0 && (
         <FetchMovieRecommendationsButton
