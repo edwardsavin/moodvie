@@ -2,14 +2,23 @@ import { SignOutButton, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect } from "react";
 import { RecentTracks } from "~/components/recent-tracks";
 import SignInSpotifyButton from "~/components/signin-spotify";
+import { api } from "~/utils/api";
 import useSpotifyAccessToken from "~/utils/hooks/use-spotify-access-token";
 import { getRandomFetchTracksMessage } from "~/utils/loading-messages";
 
 const Home: NextPage = () => {
   const user = useUser();
   const spotifyAccessToken = useSpotifyAccessToken(user);
+  const { mutate: cacheUserRole } = api.user.setRoleInRedis.useMutation();
+
+  useEffect(() => {
+    if (user.isSignedIn) {
+      cacheUserRole();
+    }
+  }, [user.isSignedIn, cacheUserRole]);
 
   return (
     <>
