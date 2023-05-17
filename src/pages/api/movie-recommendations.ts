@@ -1,15 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
 import { getAuth } from "@clerk/nextjs/server";
 import { prisma } from "~/server/db";
+import handleRateLimiting from "~/utils/rate-limiter";
 
+// Get the limit based on the user's role
+const getLimitByRole = (role: string | undefined): number => {
+  if (role === "ADMIN") return 50;
+  if (role === "PREMIUM_USER") return 20;
+  return 5;
+};
+
+// Initialize OpenAI API
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
+// Fetch movie recommendations with OpenAI API
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -20,59 +28,11 @@ export default async function handler(
   };
 
   // Limit the number of recommendations based on the user's role
-  const identifier = getAuth(req).userId;
+  const identifier = getAuth(req).userId as string;
   const userRole = await prisma.user.findUnique({
     where: { userId: getAuth(req).userId as string },
   });
-
-  let limit = 5;
-
-  switch (userRole?.role) {
-    case "ADMIN":
-      limit = 50;
-      break;
-
-    case "PREMIUM_USER":
-      limit = 20;
-      break;
-
-    case "USER":
-      limit = 5;
-      break;
-  }
-
-  const ratelimit = new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(limit, "3 m"),
-    analytics: true,
-  });
-
-  // Rate limit by user id
-  const result = await ratelimit.limit(identifier as string);
-  const remainingRequests = result.remaining;
-  const resetTime = result.reset;
-  const currentTime = Date.now();
-  const remainingTimeInSeconds = Math.ceil((resetTime - currentTime) / 1000);
-
-  // Set the rate limit headers
-  res.setHeader("X-RateLimit-Limit", result.limit);
-  res.setHeader("X-RateLimit-Remaining", remainingRequests);
-  res.setHeader("X-RateLimit-Reset", resetTime);
-  res.setHeader("X-RateLimit-RemainingTime", remainingTimeInSeconds);
-
-  // Show the remaining time in seconds if it's less than 60 seconds, otherwise show the remaining time in minutes
-  const remainingTime =
-    remainingTimeInSeconds < 60
-      ? `${remainingTimeInSeconds} seconds`
-      : `${Math.ceil(remainingTimeInSeconds / 60)} minutes`;
-
-  // If the user has exceeded the rate limit, show an error message
-  if (!result.success) {
-    res.status(500).json({
-      message: `You have exceeded the rate limit. Please try again in ${remainingTime}.`,
-    });
-    throw new Error("Rate limit exceeded");
-  }
+  const limit = getLimitByRole(userRole?.role);
 
   const exampleSongs1 =
     "1. Plain Jane by A$AP Ferg; 2. Strazile feat. (Mario V) by B.U.G. Mafia; 3. Poezie De Strada (Radio Edit) - Remix by B.U.G. Mafia; 4. 40 kmh by B.U.G. Mafia; 5. Dead Inside (Interlude) by XXXTENTACION";
@@ -95,6 +55,15 @@ export default async function handler(
   const examplePrompt = `Recommend me 5 movies based on these 5 songs:${exampleSongs1} You should respond in one single line only with the name of the movies (and year in parentheses), separated by a semicolon and a space, nothing else. Please ensure that your recommendations include only movies and not TV shows. In case that some songs are not popular enough just recommend movies based on just the name of the songs, they do not have to be accurate. If the names of the songs doesn't help, just recommend random movies.`;
 
   try {
+    const { remainingRequests, resetTime, remainingTimeInSeconds } =
+      await handleRateLimiting(identifier, limit);
+
+    // Set the rate limit headers
+    res.setHeader("X-RateLimit-Limit", limit);
+    res.setHeader("X-RateLimit-Remaining", remainingRequests);
+    res.setHeader("X-RateLimit-Reset", resetTime);
+    res.setHeader("X-RateLimit-RemainingTime", remainingTimeInSeconds);
+
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -172,6 +141,14 @@ export default async function handler(
       res.status(200).json({ movieRecommendations });
     }
   } catch (error: unknown) {
-    res.status(500).json({ message: (error as Error).message });
+    // Catch the error message from handleRateLimiting
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({
+        message:
+          "There was a problem processing your request. Please try again later.",
+      });
+    }
   }
 }

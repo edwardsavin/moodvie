@@ -86,6 +86,7 @@ const History: NextPage = () => {
     </>
   );
 };
+
 export const getServerSideProps: GetServerSideProps = async () => {
   const ssr = generateSSRHelper();
 

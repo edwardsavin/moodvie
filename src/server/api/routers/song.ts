@@ -1,11 +1,14 @@
-import { z } from "zod";
-
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
+import {
+  createManySongsSchema,
+  createSongSchema,
+  getSongByIdSchema,
+} from "~/server/helpers/song-router-helper";
 
 export const songRouter = createTRPCRouter({
   getSongById: privateProcedure
-    .input(z.object({ spotifyId: z.string() }))
+    .input(getSongByIdSchema)
     .query(async ({ input }) => {
       const song = await prisma.song.findUnique({
         where: { spotifyId: input.spotifyId },
@@ -14,17 +17,7 @@ export const songRouter = createTRPCRouter({
     }),
 
   create: privateProcedure
-    .input(
-      z.object({
-        song: z.object({
-          spotifyId: z.string(),
-          title: z.string(),
-          album: z.string(),
-          artist: z.string(),
-          cover: z.string(),
-        }),
-      })
-    )
+    .input(createSongSchema)
     .mutation(async ({ input }) => {
       const song = await prisma.song.upsert({
         where: { spotifyId: input.song.spotifyId },
@@ -41,19 +34,7 @@ export const songRouter = createTRPCRouter({
     }),
 
   createMany: privateProcedure
-    .input(
-      z.object({
-        songs: z.array(
-          z.object({
-            spotifyId: z.string(),
-            title: z.string(),
-            album: z.string(),
-            artist: z.string(),
-            cover: z.string(),
-          })
-        ),
-      })
-    )
+    .input(createManySongsSchema)
     .mutation(async ({ input }) => {
       // Remove duplicates based on spotifyId
       const uniqueSongsMap = input.songs.reduce((map, song) => {
@@ -67,15 +48,13 @@ export const songRouter = createTRPCRouter({
         uniqueSongsMap.values()
       ) as typeof input.songs;
 
-      const songs = await Promise.all(
-        uniqueSongs.map(async (song) => {
-          return await prisma.song.upsert({
-            where: { spotifyId: song.spotifyId },
-            create: song,
-            update: {},
-          });
-        })
-      );
+      await prisma.song.createMany({
+        data: uniqueSongs,
+        skipDuplicates: true,
+      });
+      const songs = await prisma.song.findMany({
+        where: { spotifyId: { in: uniqueSongs.map((song) => song.spotifyId) } },
+      });
       return songs;
     }),
 });
