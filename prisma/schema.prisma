@@ -17,7 +17,6 @@ model User {
   updatedAt DateTime @updatedAt
 
   name            String
-  profilePicture  String
   userId          String           @unique
   role            Role             @default(USER)
   recommendations Recommendation[]
