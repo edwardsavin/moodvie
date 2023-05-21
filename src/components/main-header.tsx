@@ -24,7 +24,7 @@ import { Separator } from "./ui/separator";
 export const MainHeader = ({ user }: { user: ReturnType<typeof useUser> }) => {
   return (
     <header className="flex items-center px-4 py-6">
-      <div className="flex w-full items-center justify-between px-4">
+      <div className="flex w-full items-center justify-between px-4 font-clash_display">
         <Link href="/" passHref className="flex items-center justify-center">
           {/* TODO: change to a proper svg */}
           <Image
