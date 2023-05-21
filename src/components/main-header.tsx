@@ -18,7 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { Clapperboard, HistoryIcon, LogOut } from "lucide-react";
+import { Clapperboard, Github, HistoryIcon, LogOut } from "lucide-react";
+import { Separator } from "./ui/separator";
 
 export const MainHeader = ({ user }: { user: ReturnType<typeof useUser> }) => {
   return (
@@ -38,6 +39,16 @@ export const MainHeader = ({ user }: { user: ReturnType<typeof useUser> }) => {
 
         <NavigationMenu className="mr-1 hidden w-full items-center justify-end md:flex">
           <NavigationMenuList>
+            <NavigationMenuItem>
+              <a
+                href="https://github.com/edwardsavin/moodvie"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github className={navigationMenuTriggerStyle()} />
+              </a>
+            </NavigationMenuItem>
+            <Separator orientation="vertical" className="h-4" />
             <NavigationMenuItem>
               <Link href="/recommendations" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
