@@ -20,9 +20,13 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Clapperboard, Github, HistoryIcon, LogOut } from "lucide-react";
 import { Separator } from "./ui/separator";
+import { useRouter } from "next/router";
 
 export const MainHeader = () => {
   const user = useUser();
+  const router = useRouter();
+
+  const isActive = (href: string) => router.pathname === href;
 
   return (
     <header className="flex items-center px-4 py-6">
@@ -53,13 +57,21 @@ export const MainHeader = () => {
             <Separator orientation="vertical" className="h-4" />
             <NavigationMenuItem>
               <Link href="/recommendations" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink
+                  className={`${navigationMenuTriggerStyle()} ${
+                    isActive("/recommendations") ? "text-green-500" : ""
+                  }`}
+                >
                   Recommendations
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <Link href="/history" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink
+                className={`${navigationMenuTriggerStyle()} ${
+                  isActive("/history") ? "text-green-500" : ""
+                }`}
+              >
                 History
               </NavigationMenuLink>
             </Link>
