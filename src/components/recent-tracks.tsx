@@ -1,10 +1,9 @@
 import useRecentTracks from "~/utils/hooks/use-recent-tracks";
 import FetchMovieRecommendationsButton from "./movie-recommendations-button";
-import { v4 as uuid } from "uuid";
 import { api } from "~/utils/api";
 import { useEffect } from "react";
 import type { TrackData } from "~/utils/hooks/use-recent-tracks";
-import TrackItem from "./track-item";
+import TracksCarousel from "./tracks-carousel";
 
 // Prepare the data to be sent to the backend
 const transformTrackData = (tracks: TrackData) => {
@@ -39,13 +38,16 @@ export const RecentTracks = ({
       </div>
     );
 
-  if (
-    trackData.message === "Cannot read properties of undefined (reading 'map')"
-  ) {
+  if (trackData.length === 0) {
     return (
-      <div>
-        Something went wrong, most probably you do not have any songs in your
-        Spotify history
+      <div className="p-8 text-center font-clash_display text-2xl font-semibold text-red-500 lg:p-0 lg:text-4xl">
+        <p>
+          {" "}
+          Something went wrong, most probably you do not have any songs in your
+          Spotify history.{" "}
+        </p>
+        <br />
+        <p>Please listen to some songs and come back later.</p>
       </div>
     );
   }
@@ -55,12 +57,9 @@ export const RecentTracks = ({
     .join("; ");
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-row">
-        {trackData.map((track) => (
-          <TrackItem key={uuid()} track={track} />
-        ))}
-      </div>
+    <div className="flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
+      <TracksCarousel tracks={trackData} />
+
       {trackData.length > 0 && (
         <FetchMovieRecommendationsButton
           songs={songsString}

@@ -40,7 +40,7 @@ export const MainHeader = () => {
             height={32}
             className="inline-block"
           />
-          <span className="ml-2 text-2xl font-bold">Moodvie</span>
+          <span className="ml-2 text-2xl font-semibold">Moodvie</span>
         </Link>
 
         <NavigationMenu className="mr-1 hidden w-full items-center justify-end md:flex">
