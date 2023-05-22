@@ -3,6 +3,7 @@ import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import { dark } from "@clerk/themes";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
 
@@ -23,7 +24,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <div
       className={`${archivo.variable} ${clash_display.variable} font-archivo`}
     >
-      <ClerkProvider {...pageProps}>
+      <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
         <Toaster />
         <Component {...pageProps} />
       </ClerkProvider>
