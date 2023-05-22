@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SignOutButton } from "@clerk/nextjs";
-import type { useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   NavigationMenu,
@@ -21,7 +21,9 @@ import {
 import { Clapperboard, Github, HistoryIcon, LogOut } from "lucide-react";
 import { Separator } from "./ui/separator";
 
-export const MainHeader = ({ user }: { user: ReturnType<typeof useUser> }) => {
+export const MainHeader = () => {
+  const user = useUser();
+
   return (
     <header className="flex items-center px-4 py-6">
       <div className="flex w-full items-center justify-between px-4 font-clash_display">

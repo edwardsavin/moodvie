@@ -1,10 +1,9 @@
 import Hero from "./hero";
-import type { useUser } from "@clerk/nextjs";
 
-const LandingMain = ({ user }: { user: ReturnType<typeof useUser> }) => {
+const LandingMain = () => {
   return (
     <main id="content">
-      <Hero user={user} />
+      <Hero />
 
       {/* One image presentation */}
       <section id="presentation"></section>

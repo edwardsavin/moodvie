@@ -1,8 +1,10 @@
 import Link from "next/link";
 import SignInSpotifyButton from "~/components/signin-spotify";
-import type { useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
-const Hero = ({ user }: { user: ReturnType<typeof useUser> }) => {
+const Hero = () => {
+  const user = useUser();
+
   return (
     <section
       id="hero"
