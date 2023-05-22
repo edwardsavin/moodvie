@@ -43,7 +43,7 @@ The Moodvie app is built with the T3 stack, which is based on Next.js, tRPC, Tai
 
 The app consists of the following components:
 
-* **Frontend:** The frontend is built with Next.js and Tailwind CSS. It communicates with the backend via tRPC API calls.
+* **Frontend:** The frontend is built with Next.js, Tailwind CSS and shadcn-ui. It communicates with the backend via tRPC API calls.
 
 * **Backend:** The backend is built with tRPC, which provides typesafe APIs for the frontend. It communicates with the Spotify, OpenAI, and TMDB APIs to retrieve user data and movie recommendations.
 
@@ -97,6 +97,7 @@ npm run dev
 * [create-t3-app](https://github.com/t3-oss/create-t3-app) - Interactive CLI to start a full-stack, typesafe Next.js app
 * [Next.js](https://nextjs.org/) - The React Framework
 * [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
+* [shadcn-ui](https://ui.shadcn.com/) - Re-usable components built using Radix UI and Tailwind CSS.
 * [TypeScript](https://www.typescriptlang.org/) - A strongly typed superset of JavaScript
 * [Prisma](https://www.prisma.io/) - Next-generation ORM for Node.js and TypeScript
 * [tRPC](https://trpc.io/) - End-to-end typesafe APIs made easy
