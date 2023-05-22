@@ -60,7 +60,7 @@ const TracksCarousel = ({ tracks }: { tracks: TrackData }) => {
           transition={{ duration: 0.6 }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.25}
+          dragElastic={0.04}
           onDragEnd={(e, { offset, velocity }) => {
             const swipe = swipePower(offset.x, velocity.x);
             if (swipe < -swipeConfidenceThreshold) {
