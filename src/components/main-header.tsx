@@ -103,4 +103,6 @@ export const MainHeader = ({ user }: { user: ReturnType<typeof useUser> }) => {
   );
 };
 
+MainHeader.displayName = "MainHeader";
+
 export default MainHeader;

@@ -16,4 +16,6 @@ const MainFooter = () => (
   </footer>
 );
 
+MainFooter.displayName = "MainFooter";
+
 export default MainFooter;
