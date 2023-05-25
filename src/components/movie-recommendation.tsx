@@ -1,9 +1,9 @@
 import Image from "next/image";
 import useTmdbMovieInfo from "~/utils/hooks/use-tmdb-movie-info";
-import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
-import type { Movie } from "./movie-recommendations-button";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
+import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
+import type { Movie } from "./movie-recommendations-button";
 
 // Display the movie recommendations modal with a poster, title, release year, overview and links to TMDB and Letterboxd
 export const MovieModal = ({

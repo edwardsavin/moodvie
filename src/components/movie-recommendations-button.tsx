@@ -1,9 +1,14 @@
 import { toast } from "react-hot-toast";
 import getMovieRecommendations from "~/utils/get-movie-recommendations";
-import { useState } from "react";
-import MovieRecommendations from "./movie-recommendation";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import type { TrackData } from "~/utils/hooks/use-recent-tracks";
+
+export type MovieData = {
+  recommendationId: string;
+  recommendedMovies: Movie[];
+  uniqueKey: number;
+};
 
 export type Movie = {
   title: string;
@@ -13,10 +18,15 @@ export type Movie = {
 type Props = {
   songs: string;
   trackData: TrackData;
+  handleMovieData: (movieData: MovieData) => void;
 };
 
 // Start fetching movie recommendations based on the user's Spotify history
-const FetchMovieRecommendationsButton = ({ songs, trackData }: Props) => {
+const FetchMovieRecommendationsButton = ({
+  songs,
+  trackData,
+  handleMovieData,
+}: Props) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
   const [uniqueKey, setUniqueKey] = useState<number>(Date.now());
 
@@ -27,6 +37,16 @@ const FetchMovieRecommendationsButton = ({ songs, trackData }: Props) => {
   const [recommendationId, setRecommendationId] = useState<string | null>(null);
   const { mutate: mutateRecommendation } =
     api.recommendation.create.useMutation();
+
+  useEffect(() => {
+    if (recommendedMovies.length > 0 && recommendationId) {
+      handleMovieData({
+        recommendationId,
+        recommendedMovies,
+        uniqueKey,
+      });
+    }
+  }, [recommendationId, recommendedMovies, uniqueKey, handleMovieData]);
 
   const handleClick = async () => {
     try {
@@ -72,21 +92,12 @@ const FetchMovieRecommendationsButton = ({ songs, trackData }: Props) => {
   };
 
   return (
-    <>
-      <button
-        className="rounded-md bg-white px-4 py-2 text-black"
-        onClick={handleClick as () => void}
-      >
-        Get movie recommendations
-      </button>
-      {recommendedMovies.length > 0 && recommendationId && (
-        <MovieRecommendations
-          key={uniqueKey}
-          movies={recommendedMovies}
-          recommendationId={recommendationId}
-        />
-      )}
-    </>
+    <button
+      className="rounded-md bg-white px-4 py-2 text-black"
+      onClick={handleClick as () => void}
+    >
+      Get movie recommendations
+    </button>
   );
 };
 

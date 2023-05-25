@@ -1,7 +1,6 @@
 import { useUser } from "@clerk/nextjs";
-import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MainFooter from "~/components/main-footer";
 import MainHeader from "~/components/main-header";
 import { RecentTracks } from "~/components/recent-tracks";
@@ -9,8 +8,22 @@ import SignInSpotifyButton from "~/components/signin-spotify";
 import { api } from "~/utils/api";
 import useSpotifyAccessToken from "~/utils/hooks/use-spotify-access-token";
 import { getRandomFetchTracksMessage } from "~/utils/loading-messages";
+import FetchMovieRecommendationsButton from "~/components/movie-recommendations-button";
+import MovieRecommendations from "~/components/movie-recommendation";
+import type { TrackData } from "~/utils/hooks/use-recent-tracks";
+import type { MovieData } from "~/components/movie-recommendations-button";
+import type { NextPage } from "next";
 
 const Recommendations: NextPage = () => {
+  // Get track data from RecentTracks component
+  const [trackData, setTrackData] = useState<TrackData>([]);
+  const handleTrackData = (data: TrackData) => setTrackData(data);
+
+  const [movieData, setMovieData] = useState<MovieData | null>(null);
+  const handleMovieData = useCallback((data: MovieData) => {
+    setMovieData(data);
+  }, []);
+
   const user = useUser();
   const spotifyAccessToken = useSpotifyAccessToken(user);
   const { mutate: cacheUserRole } = api.user.setRoleInRedis.useMutation();
@@ -20,6 +33,10 @@ const Recommendations: NextPage = () => {
       cacheUserRole();
     }
   }, [user.isSignedIn, cacheUserRole]);
+
+  const songsString = trackData
+    .map((song, index) => `${index + 1}. ${song.name} by ${song.artist}`)
+    .join("; ");
 
   return (
     <>
@@ -44,8 +61,32 @@ const Recommendations: NextPage = () => {
                 {getRandomFetchTracksMessage()}
               </p>
             )}
+
             {spotifyAccessToken && (
-              <RecentTracks spotifyAccessToken={spotifyAccessToken} />
+              <>
+                <RecentTracks
+                  spotifyAccessToken={spotifyAccessToken}
+                  handleTrackData={handleTrackData}
+                />
+
+                {trackData.length > 0 && (
+                  <>
+                    <FetchMovieRecommendationsButton
+                      songs={songsString}
+                      trackData={trackData}
+                      handleMovieData={handleMovieData}
+                    />
+
+                    {movieData && (
+                      <MovieRecommendations
+                        key={movieData.uniqueKey}
+                        movies={movieData.recommendedMovies}
+                        recommendationId={movieData.recommendationId}
+                      />
+                    )}
+                  </>
+                )}
+              </>
             )}
           </div>
         </section>

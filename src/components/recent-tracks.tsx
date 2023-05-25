@@ -1,9 +1,8 @@
 import useRecentTracks from "~/utils/hooks/use-recent-tracks";
-import FetchMovieRecommendationsButton from "./movie-recommendations-button";
 import { api } from "~/utils/api";
 import { useEffect } from "react";
-import type { TrackData } from "~/utils/hooks/use-recent-tracks";
 import TracksCarousel from "./tracks-carousel";
+import type { TrackData } from "~/utils/hooks/use-recent-tracks";
 
 // Prepare the data to be sent to the backend
 const transformTrackData = (tracks: TrackData) => {
@@ -19,8 +18,10 @@ const transformTrackData = (tracks: TrackData) => {
 // Display the most recent tracks from the user's Spotify history
 export const RecentTracks = ({
   spotifyAccessToken,
+  handleTrackData,
 }: {
   spotifyAccessToken: string;
+  handleTrackData: (data: TrackData) => void;
 }) => {
   const trackData = useRecentTracks(spotifyAccessToken);
 
@@ -30,6 +31,11 @@ export const RecentTracks = ({
   useEffect(() => {
     if (trackData) mutate({ songs: transformTrackData(trackData) });
   }, [trackData, mutate]);
+
+  // Send the data to the parent component
+  useEffect(() => {
+    if (trackData) handleTrackData(trackData);
+  }, [trackData, handleTrackData]);
 
   if (!trackData)
     return (
@@ -52,20 +58,9 @@ export const RecentTracks = ({
     );
   }
 
-  const songsString = trackData
-    .map((song, index) => `${index + 1}. ${song.name} by ${song.artist}`)
-    .join("; ");
-
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
       <TracksCarousel tracks={trackData} />
-
-      {trackData.length > 0 && (
-        <FetchMovieRecommendationsButton
-          songs={songsString}
-          trackData={trackData}
-        />
-      )}
     </div>
   );
 };
