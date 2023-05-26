@@ -16,7 +16,7 @@ Moodvie takes your recently listened to songs from Spotify and recommends you mo
 
 ## Project Status
 
-Moodvie is currently in the **alpha stage** and under active development. I am constantly working on improving the app and looks. If you have any suggestions or would like to contribute, please refer to the [Contributing](#contributing) section below.
+Moodvie is currently in the **alpha stage** and under active development (**non-test users cannot register at the moment**). I am constantly working on improving the app and looks. If you have any suggestions or would like to contribute, please refer to the [Contributing](#contributing) section below.
 
 ## Table of Contents
 * [Features](#features)
