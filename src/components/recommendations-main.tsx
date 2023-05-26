@@ -41,7 +41,7 @@ const RecommendationsMain = () => {
   return (
     <main id="content">
       <section className="py-12 sm:py-8 md:py-12 lg:py-14 xl:py-12 2xl:py-28">
-        <div className="mb-8 flex flex-col items-center">
+        <div className="flex flex-col items-center">
           <div>{!user.isSignedIn && <SignInSpotifyButton />}</div>
 
           {user.isSignedIn && !spotifyAccessToken && (

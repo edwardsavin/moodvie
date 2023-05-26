@@ -59,7 +59,7 @@ export const RecentTracks = ({
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
+    <div className="flex h-80 w-screen flex-col items-center overflow-hidden sm:h-[32rem] md:h-96">
       <TracksCarousel tracks={trackData} />
     </div>
   );
