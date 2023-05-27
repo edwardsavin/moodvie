@@ -5,6 +5,11 @@ import { api } from "~/utils/api";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "./movie-recommendations-button";
 
+type MovieRecommendationsProps = {
+  movies: Movie[];
+  recommendationId: string;
+};
+
 // Display the movie recommendations modal with a poster, title, release year, overview and links to TMDB and Letterboxd
 export const MovieModal = ({
   movieInfo,
@@ -151,11 +156,6 @@ export const MovieCard = (movieInfo: MovieInfo) => {
   );
 };
 
-type MovieRecommendationsProps = {
-  movies: Movie[];
-  recommendationId: string;
-};
-
 // Render all aggregated movie recommendations
 export const MovieRecommendations = ({
   movies,
@@ -231,10 +231,9 @@ export const MovieRecommendations = ({
   return (
     <div className="mt-8 flex flex-col">
       <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
-        {moviesInfo &&
-          moviesInfo.map((movieInfo: MovieInfo) => {
-            return <MovieCard key={movieInfo.id} {...movieInfo} />;
-          })}
+        {moviesInfo?.map((movieInfo: MovieInfo) => (
+          <MovieCard key={movieInfo.id} {...movieInfo} />
+        ))}
       </div>
     </div>
   );
