@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/nextjs";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RecentTracks } from "~/components/recent-tracks";
 import SignInSpotifyButton from "~/components/signin-spotify";
 import { api } from "~/utils/api";
@@ -25,6 +25,19 @@ const RecommendationsMain = () => {
   const user = useUser();
   const spotifyAccessToken = useSpotifyAccessToken(user);
   const { mutate: cacheUserRole } = api.user.setRoleInRedis.useMutation();
+
+  const MovieRecommendationsRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to movie recommendations when they are fetched
+  useEffect(() => {
+    setTimeout(() => {
+      if (MovieRecommendationsRef.current) {
+        MovieRecommendationsRef.current.scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+    }, 300);
+  }, [movieData]);
 
   useEffect(() => {
     if (user.isSignedIn) {
@@ -67,7 +80,7 @@ const RecommendationsMain = () => {
 
                   {movieData && (
                     <MovieRecommendations
-                      key={movieData.uniqueKey}
+                      ref={MovieRecommendationsRef}
                       movies={movieData.recommendedMovies}
                       recommendationId={movieData.recommendationId}
                     />

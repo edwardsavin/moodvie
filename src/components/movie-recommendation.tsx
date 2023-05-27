@@ -1,6 +1,6 @@
 import Image from "next/image";
 import useTmdbMovieInfo from "~/utils/hooks/use-tmdb-movie-info";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "./movie-recommendations-button";
@@ -113,29 +113,30 @@ export const MovieModal = ({
 export const MovieCard = (movieInfo: MovieInfo) => {
   const [showModal, setShowModal] = useState(false);
 
-  const imageWidth = 200;
-  const imageHeight = 300;
+  const imageWidth = 250;
+  const imageHeight = 350;
 
   if (!movieInfo) return <div>Loading...</div>;
 
   if (movieInfo.message === "No result found") return null;
 
   return (
-    <div className="mt-6 flex flex-col" onClick={() => setShowModal(true)}>
+    <div
+      className="mt-6 flex transform flex-col gap-1 transition-all duration-200 hover:scale-105"
+      onClick={() => setShowModal(true)}
+    >
       <div className="mt-4 flex flex-col">
-        <h2 className="font-bold text-yellow-100">
-          <p className="cursor-pointer text-lg">{movieInfo.title}</p>{" "}
-          <p className="text-sm">
+        <h2 className="font-clash_display font-semibold text-yellow-100">
+          <p className="cursor-pointer text-xl">{movieInfo.title}</p>{" "}
+          <p className="font-archivo">
             ⭐{Math.round((movieInfo.vote_average as number) * 10) / 10}/10
           </p>
         </h2>
-        <p className="text-sm text-gray-300">
-          {movieInfo.release_date?.split("-")[0]}
-        </p>
+        <p className="text-gray-300">{movieInfo.release_date?.split("-")[0]}</p>
       </div>
-      <div className="relative w-full ">
+      <div className="relative w-full">
         <Image
-          className="cursor-pointer"
+          className="cursor-pointer rounded-sm shadow-lg hover:animate-pulse hover:shadow-2xl hover:shadow-slate-800/90"
           src={`https://image.tmdb.org/t/p/original${
             movieInfo.poster_path as string
           }`}
@@ -157,86 +158,90 @@ export const MovieCard = (movieInfo: MovieInfo) => {
 };
 
 // Render all aggregated movie recommendations
-export const MovieRecommendations = ({
-  movies,
-  recommendationId,
-}: MovieRecommendationsProps) => {
-  const moviesInfo = useTmdbMovieInfo(
-    movies.map((movie) => movie.title),
-    movies.map((movie) => movie.year)
-  ) as unknown as MovieInfo[];
+export const MovieRecommendations = forwardRef(
+  ({ movies, recommendationId }: MovieRecommendationsProps, ref) => {
+    const moviesInfo = useTmdbMovieInfo(
+      movies.map((movie) => movie.title),
+      movies.map((movie) => movie.year)
+    ) as unknown as MovieInfo[];
 
-  const { mutate: mutateMovies } = api.movie.createMany.useMutation();
-  const { mutate: mutateRecommendation } =
-    api.recommendation.update.useMutation();
-  const { mutate: mutateDeleteEmptyRecommendations } =
-    api.recommendation.deleteEmpty.useMutation();
+    const { mutate: mutateMovies } = api.movie.createMany.useMutation();
+    const { mutate: mutateRecommendation } =
+      api.recommendation.update.useMutation();
+    const { mutate: mutateDeleteEmptyRecommendations } =
+      api.recommendation.deleteEmpty.useMutation();
 
-  // Create the movies in the database when the movie info is fetched
-  useEffect(() => {
-    if (!moviesInfo) return;
+    // Create the movies in the database when the movie info is fetched
+    useEffect(() => {
+      if (!moviesInfo) return;
 
-    const moviesToCreate = moviesInfo.map((movieInfo: MovieInfo) => {
-      // If the movie has a poster, use it. Otherwise, use a placeholder
-      let movieCover = null;
-      if (movieInfo.poster_path) {
-        movieCover = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
-      } else {
-        movieCover = `https://via.placeholder.com/200x300?text=${movieInfo.title}`;
-      }
+      const moviesToCreate = moviesInfo.map((movieInfo: MovieInfo) => {
+        // If the movie has a poster, use it. Otherwise, use a placeholder
+        let movieCover = null;
+        if (movieInfo.poster_path) {
+          movieCover = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
+        } else {
+          movieCover = `https://via.placeholder.com/200x300?text=${movieInfo.title}`;
+        }
 
-      let movieYear = null;
-      if (movieInfo.release_date) {
-        movieYear = parseInt(movieInfo.release_date.split("-")[0] as string);
-      }
+        let movieYear = null;
+        if (movieInfo.release_date) {
+          movieYear = parseInt(movieInfo.release_date.split("-")[0] as string);
+        }
 
-      return {
-        title: movieInfo.title,
-        cover: movieCover,
-        tmdbId: movieInfo.id,
-        year: movieYear,
-        overview: movieInfo.overview ?? null,
-        vote_average: movieInfo.vote_average ?? null,
-      };
-    });
+        return {
+          title: movieInfo.title,
+          cover: movieCover,
+          tmdbId: movieInfo.id,
+          year: movieYear,
+          overview: movieInfo.overview ?? null,
+          vote_average: movieInfo.vote_average ?? null,
+        };
+      });
 
-    mutateMovies(
-      {
-        movies: moviesToCreate,
-      },
-      {
-        onSettled: () => {
-          mutateRecommendation(
-            {
-              id: recommendationId,
-              moviesIds: moviesToCreate.map((movie) => movie.tmdbId),
-            },
-            {
-              onSettled: () => {
-                mutateDeleteEmptyRecommendations();
-              },
-            }
-          );
+      mutateMovies(
+        {
+          movies: moviesToCreate,
         },
-      }
-    );
-  }, [
-    moviesInfo,
-    mutateMovies,
-    mutateRecommendation,
-    mutateDeleteEmptyRecommendations,
-    recommendationId,
-  ]);
+        {
+          onSettled: () => {
+            mutateRecommendation(
+              {
+                id: recommendationId,
+                moviesIds: moviesToCreate.map((movie) => movie.tmdbId),
+              },
+              {
+                onSettled: () => {
+                  mutateDeleteEmptyRecommendations();
+                },
+              }
+            );
+          },
+        }
+      );
+    }, [
+      moviesInfo,
+      mutateMovies,
+      mutateRecommendation,
+      mutateDeleteEmptyRecommendations,
+      recommendationId,
+    ]);
 
-  return (
-    <div className="mt-8 flex flex-col">
-      <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
-        {moviesInfo?.map((movieInfo: MovieInfo) => (
-          <MovieCard key={movieInfo.id} {...movieInfo} />
-        ))}
+    return (
+      <div
+        className="mt-8 flex flex-col"
+        ref={ref as React.MutableRefObject<HTMLDivElement>}
+      >
+        <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
+          {moviesInfo?.map((movieInfo: MovieInfo) => (
+            <MovieCard key={movieInfo.id} {...movieInfo} />
+          ))}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
+
+MovieRecommendations.displayName = "MovieRecommendations";
 
 export default MovieRecommendations;
