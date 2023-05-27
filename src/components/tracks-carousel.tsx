@@ -45,7 +45,7 @@ const TracksCarousel = ({ tracks }: { tracks: TrackData }) => {
     <div className="relative">
       {tracks.map((track, index) => (
         <motion.div
-          className="absolute left-1/2 w-[60vw] overflow-hidden md:h-[300px] md:w-[300px]"
+          className="absolute left-1/2 w-[60vw] cursor-grab overflow-hidden md:h-[300px] md:w-[300px]"
           key={index}
           animate={{
             left: calculateLeft(index),
@@ -69,6 +69,7 @@ const TracksCarousel = ({ tracks }: { tracks: TrackData }) => {
               paginate(-1);
             }
           }}
+          whileTap={{ cursor: "grabbing" }}
         >
           <Image
             src={track.image}
