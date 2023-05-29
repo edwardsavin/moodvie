@@ -1,9 +1,17 @@
 import Link from "next/link";
 import SignInSpotifyButton from "~/components/signin-spotify";
 import { useUser } from "@clerk/nextjs";
+import { Button } from "./ui/button";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const Hero = () => {
   const user = useUser();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+  };
 
   return (
     <section
@@ -34,12 +42,25 @@ const Hero = () => {
 
                   <div className="mt-4 flex w-full items-center justify-center gap-4 xl:mt-8">
                     {!user.isSignedIn && <SignInSpotifyButton />}
-                    {user.isSignedIn && (
-                      <Link href="/recommendations">
-                        <button className="rounded bg-green-600 px-5 py-2.5 font-clash_display text-lg font-semibold text-gray-50 transition duration-300 ease-in-out hover:bg-green-700 sm:px-6 sm:py-3">
-                          Get Started
-                        </button>
-                      </Link>
+
+                    {isLoading && (
+                      <Button
+                        className="rounded bg-green-600/80 px-5 py-6 font-clash_display text-lg font-semibold text-gray-50"
+                        disabled
+                      >
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Loading...
+                      </Button>
+                    )}
+
+                    {!isLoading && user.isSignedIn && (
+                      <Button
+                        asChild
+                        onClick={handleClick as () => void}
+                        className="rounded bg-green-600 px-5 py-6 font-clash_display text-lg font-semibold text-gray-50 transition duration-300 ease-in-out hover:bg-green-700"
+                      >
+                        <Link href="/recommendations">Get Started</Link>
+                      </Button>
                     )}
                   </div>
                 </div>
