@@ -36,7 +36,7 @@ const RecommendationsMain = () => {
           behavior: "smooth",
         });
       }
-    }, 300);
+    }, 500);
   }, [movieData]);
 
   useEffect(() => {
