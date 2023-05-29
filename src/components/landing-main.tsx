@@ -1,12 +1,11 @@
 import Hero from "./hero";
+import Presentation from "./presentation";
 
 const LandingMain = () => {
   return (
     <main id="content">
       <Hero />
-
-      {/* One image presentation */}
-      <section id="presentation"></section>
+      <Presentation />
     </main>
   );
 };
