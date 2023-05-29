@@ -119,7 +119,7 @@ const FetchMovieRecommendationsButton = ({
       "
           onClick={handleClick as () => void}
         >
-          Moodify
+          Moodviefy
         </Button>
       )}
     </>
