@@ -1,9 +1,9 @@
+import MovieCard from "./movie-card";
 import useTmdbMovieInfo from "~/utils/hooks/use-tmdb-movie-info";
 import { forwardRef, useEffect } from "react";
 import { api } from "~/utils/api";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "./movie-recommendations-button";
-import MovieCard from "./movie-card";
 
 type MovieRecommendationsProps = {
   movies: Movie[];
@@ -85,9 +85,9 @@ export const MovieRecommendations = forwardRef(
         className="mt-8 flex flex-col"
         ref={ref as React.MutableRefObject<HTMLDivElement>}
       >
-        <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
+        <div className="m:grid-cols-2 mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5">
           {moviesInfo?.map((movieInfo: MovieInfo) => (
-            <MovieCard key={movieInfo.id} {...movieInfo} />
+            <MovieCard key={movieInfo.id} movieInfo={movieInfo} />
           ))}
         </div>
       </div>

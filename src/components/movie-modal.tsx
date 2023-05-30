@@ -6,9 +6,15 @@ import {
   DialogTitle,
 } from "../components/ui/dialog";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
+import type { Movie } from "@prisma/client";
+
+type MovieModalProps = {
+  movieInfo?: MovieInfo;
+  movieDb?: Movie;
+};
 
 // Display the movie recommendations modal with a poster, title, release year, overview and links to TMDB and Letterboxd
-const MovieModal = ({ movieInfo }: { movieInfo: MovieInfo }) => {
+const MovieModal = ({ movieInfo, movieDb }: MovieModalProps) => {
   const imageWidth = 250;
   const imageHeight = 350;
 
@@ -16,32 +22,43 @@ const MovieModal = ({ movieInfo }: { movieInfo: MovieInfo }) => {
     <DialogHeader className="gap-4">
       <DialogTitle>
         <div className="font-clash_display text-2xl font-semibold text-yellow-100">
-          {movieInfo.title} ({movieInfo.release_date?.split("-")[0]})
+          {movieInfo?.title || movieDb?.title} (
+          {movieInfo?.release_date?.split("-")[0] || movieDb?.year})
         </div>
       </DialogTitle>
 
       <DialogDescription className="flex flex-col items-center gap-2">
-        <div className="font-clash_display text-lg font-semibold text-yellow-100">
-          ⭐{Math.round((movieInfo.vote_average as number) * 10) / 10}/ 10
-        </div>
+        <span className="font-clash_display text-lg font-semibold text-yellow-100">
+          ⭐
+          {Math.round(
+            (movieInfo?.vote_average || (movieDb?.vote_average as number)) * 10
+          ) / 10}
+          / 10
+        </span>
 
         <Image
           className="mb-4 rounded-sm shadow-2xl shadow-slate-800/90"
-          src={`https://image.tmdb.org/t/p/original${
-            movieInfo.poster_path as string
-          }`}
-          alt={movieInfo.title}
+          src={
+            movieInfo?.poster_path
+              ? `https://image.tmdb.org/t/p/original${movieInfo.poster_path}`
+              : (movieDb?.cover as string)
+          }
+          alt={movieInfo?.title || (movieDb?.title as string)}
           width={imageWidth}
           height={imageHeight}
           priority
         />
 
-        <div className="font-archivo text-base">{movieInfo.overview}</div>
+        <span className="font-archivo text-base">
+          {movieInfo?.overview || movieDb?.overview}
+        </span>
       </DialogDescription>
 
       <DialogFooter className="flex flex-col items-center gap-1">
         <a
-          href={`https://www.themoviedb.org/movie/${movieInfo.id}`}
+          href={`https://www.themoviedb.org/movie/${
+            movieInfo?.id || (movieDb?.tmdbId as number)
+          }`}
           target="_blank"
           rel="noreferrer"
         >
@@ -54,7 +71,9 @@ const MovieModal = ({ movieInfo }: { movieInfo: MovieInfo }) => {
         </a>
 
         <a
-          href={`https://letterboxd.com/search/${movieInfo.title}`}
+          href={`https://letterboxd.com/search/${
+            movieInfo?.title || (movieDb?.title as string)
+          }/`}
           target="_blank"
           rel="noreferrer"
         >

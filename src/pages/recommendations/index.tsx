@@ -1,8 +1,8 @@
 import Head from "next/head";
 import MainFooter from "~/components/main-footer";
 import MainHeader from "~/components/main-header";
-import type { NextPage } from "next";
 import RecommendationsMain from "~/components/recommendations-main";
+import type { NextPage } from "next";
 
 const Recommendations: NextPage = () => {
   return (

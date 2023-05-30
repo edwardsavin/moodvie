@@ -2,14 +2,27 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
-import type { TrackData } from "~/utils/hooks/use-recent-tracks";
+import type { Track, TrackData } from "~/utils/hooks/use-recent-tracks";
+import type { Song } from "@prisma/client";
+
+type TracksCarouselProps = {
+  songs?: TrackData;
+  songsDb?: Song[];
+};
+
+type TrackOrSong = Track | Song;
+
+const isTrack = (trackOrSong: TrackOrSong): trackOrSong is Track => {
+  return (trackOrSong as Track).image !== undefined;
+};
 
 const swipeConfidenceThreshold = 5000;
 const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
 };
 
-const TracksCarousel = ({ tracks }: { tracks: TrackData }) => {
+const TracksCarousel = ({ songs, songsDb }: TracksCarouselProps) => {
+  const tracks = songs || songsDb || [];
   const [position, setPosition] = useState(Math.floor(tracks.length / 2));
 
   const paginate = (newDirection: number) => {
@@ -72,8 +85,8 @@ const TracksCarousel = ({ tracks }: { tracks: TrackData }) => {
           whileTap={{ cursor: "grabbing" }}
         >
           <Image
-            src={track.image}
-            alt={track.name}
+            src={isTrack(track) ? track.image : (track.cover as string)}
+            alt={isTrack(track) ? track.name : track.title}
             width={300}
             height={300}
             className="pointer-events-none w-full"
@@ -90,7 +103,7 @@ const TracksCarousel = ({ tracks }: { tracks: TrackData }) => {
                   "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%)",
               }}
             >
-              <span>{track.name}</span>
+              <span>{isTrack(track) ? track.name : track.title}</span>
               <br />
               <span> by {track.artist}</span>
             </p>

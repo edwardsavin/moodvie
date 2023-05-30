@@ -74,11 +74,22 @@ export const theme = {
         from: { opacity: 0 },
         to: { opacity: 1 },
       },
+      text: {
+        "0%, 100%": {
+          "background-size": "200% 200%",
+          "background-position": "left center",
+        },
+        "50%": {
+          "background-size": "200% 200%",
+          "background-position": "right center",
+        },
+      },
     },
     animation: {
       "accordion-down": "accordion-down 0.2s ease-out",
       "accordion-up": "accordion-up 0.2s ease-out",
       "fade-in": "fade-in 0.6s ease-out",
+      text: "text 5s ease infinite",
     },
   },
 };
