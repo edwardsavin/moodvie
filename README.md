@@ -12,7 +12,7 @@ Moodvie takes your recently listened to songs from Spotify and recommends you mo
 
 ## Moodvie App
 ### [Moodvie 🍿](https://moodvie.edwardcs.com/)
-![moodvie](https://user-images.githubusercontent.com/9148855/236710559-01377a7a-c219-4969-b41c-e4570c40028e.gif)
+https://github.com/edwardsavin/moodvie/assets/9148855/c4e47f7e-a6fd-4784-94a9-cfd0ef61e40f
 
 ## Project Status
 
