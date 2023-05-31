@@ -6,6 +6,18 @@ import { Check, ChevronRight, Circle } from "lucide-react"
 
 import { cn } from "~/lib/utils"
 
+import localFont from "next/font/local";
+
+const clash_display = localFont({
+  src: "../../../public/fonts/ClashDisplay-Variable.ttf",
+  variable: "--font-clash-display",
+});
+
+const archivo = localFont({
+  src: "../../../public/fonts/Archivo-Variable.ttf",
+  variable: "--font-archivo",
+});
+
 const DropdownMenu = DropdownMenuPrimitive.Root
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
@@ -65,7 +77,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        `${archivo.variable} ${clash_display.variable} font-archivo z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2`,
         className
       )}
       {...props}

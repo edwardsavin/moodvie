@@ -90,7 +90,9 @@ export const MainHeader = () => {
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{user.user.fullName}</DropdownMenuLabel>
+              <DropdownMenuLabel className="font-clash_display">
+                {user.user.fullName}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Clapperboard className="mr-2 h-4 w-4" />

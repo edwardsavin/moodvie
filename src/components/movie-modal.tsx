@@ -19,7 +19,7 @@ const MovieModal = ({ movieInfo, movieDb }: MovieModalProps) => {
   const imageHeight = 350;
 
   return (
-    <DialogHeader className="gap-4">
+    <DialogHeader className="gap-6">
       <DialogTitle>
         <div className="font-clash_display text-2xl font-semibold text-yellow-100">
           {movieInfo?.title || movieDb?.title} (
@@ -49,12 +49,12 @@ const MovieModal = ({ movieInfo, movieDb }: MovieModalProps) => {
           priority
         />
 
-        <span className="font-archivo text-base">
+        <span className="mb-4 mt-2 font-archivo text-lg">
           {movieInfo?.overview || movieDb?.overview}
         </span>
       </DialogDescription>
 
-      <DialogFooter className="flex flex-col items-center gap-1">
+      <DialogFooter className="flex flex-col items-center gap-2">
         <a
           href={`https://www.themoviedb.org/movie/${
             movieInfo?.id || (movieDb?.tmdbId as number)
