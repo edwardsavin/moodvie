@@ -8,11 +8,11 @@ const Presentation = () => (
         muted
         loop
         playsInline
-        poster="./moodvie-presentation-poster.jpg"
+        poster="/moodvie-presentation-poster.jpg"
         width="1200px"
         className="rounded-lg border-4 border-neutral-900 bg-neutral-900 shadow-xl md:hidden"
       >
-        <source src="./moodvie-presentation.mp4" type="video/mp4" />
+        <source src="/moodvie-presentation.mp4" type="video/mp4" />
         You need a browser that supports HTML5 video to view this video.
       </video>
 
@@ -28,10 +28,10 @@ const Presentation = () => (
           muted
           loop
           playsInline
-          poster="./moodvie-presentation-poster.jpg"
+          poster="/moodvie-presentation-poster.jpg"
           width="1200px"
         >
-          <source src="./moodvie-presentation.mp4" type="video/mp4" />
+          <source src="/moodvie-presentation.mp4" type="video/mp4" />
           You need a browser that supports HTML5 video to view this video.
         </video>
       </Link>
