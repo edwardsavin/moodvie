@@ -54,6 +54,20 @@ const TracksCarousel = ({ songs, songsDb }: TracksCarouselProps) => {
     return `${baseValue}vw`;
   };
 
+  const handleClick = (
+    e: MouseEvent | TouchEvent | PointerEvent,
+    track: TrackOrSong
+  ) => {
+    e.preventDefault();
+    window.open(
+      isTrack(track)
+        ? `https://open.spotify.com/track/${track.id}`
+        : `https://open.spotify.com/track/${track.spotifyId}`,
+
+      "_blank"
+    );
+  };
+
   return (
     <div className="relative">
       {tracks.map((track, index) => (
@@ -84,16 +98,19 @@ const TracksCarousel = ({ songs, songsDb }: TracksCarouselProps) => {
           }}
           whileTap={{ cursor: "grabbing" }}
         >
-          <Image
-            src={isTrack(track) ? track.image : (track.cover as string)}
-            alt={isTrack(track) ? track.name : track.title}
-            width={300}
-            height={300}
-            className="pointer-events-none w-full"
-            style={{
-              filter: index === position ? "none" : "brightness(0.98)",
-            }}
-          ></Image>
+          <motion.a onTap={(e) => handleClick(e, track)}>
+            <Image
+              src={isTrack(track) ? track.image : (track.cover as string)}
+              alt={isTrack(track) ? track.name : track.title}
+              width={300}
+              height={300}
+              className="pointer-events-none w-full"
+              style={{
+                filter: index === position ? "none" : "brightness(0.98)",
+              }}
+            ></Image>
+          </motion.a>
+
           {index === position && (
             <p
               className="pointer-events-none absolute bottom-0 left-0 h-auto w-full animate-fade-in text-center font-clash_display text-2xl font-semibold text-gray-50"
