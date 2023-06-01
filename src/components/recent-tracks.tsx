@@ -1,10 +1,8 @@
 import useRecentTracks from "~/utils/hooks/use-recent-tracks";
-import FetchMovieRecommendationsButton from "./movie-recommendations-button";
-import { v4 as uuid } from "uuid";
 import { api } from "~/utils/api";
 import { useEffect } from "react";
+import TracksCarousel from "./tracks-carousel";
 import type { TrackData } from "~/utils/hooks/use-recent-tracks";
-import TrackItem from "./track-item";
 
 // Prepare the data to be sent to the backend
 const transformTrackData = (tracks: TrackData) => {
@@ -20,8 +18,10 @@ const transformTrackData = (tracks: TrackData) => {
 // Display the most recent tracks from the user's Spotify history
 export const RecentTracks = ({
   spotifyAccessToken,
+  handleTrackData,
 }: {
   spotifyAccessToken: string;
+  handleTrackData: (data: TrackData) => void;
 }) => {
   const trackData = useRecentTracks(spotifyAccessToken);
 
@@ -32,6 +32,11 @@ export const RecentTracks = ({
     if (trackData) mutate({ songs: transformTrackData(trackData) });
   }, [trackData, mutate]);
 
+  // Send the data to the parent component
+  useEffect(() => {
+    if (trackData) handleTrackData(trackData);
+  }, [trackData, handleTrackData]);
+
   if (!trackData)
     return (
       <div>
@@ -39,34 +44,23 @@ export const RecentTracks = ({
       </div>
     );
 
-  if (
-    trackData.message === "Cannot read properties of undefined (reading 'map')"
-  ) {
+  if (trackData.length === 0) {
     return (
-      <div>
-        Something went wrong, most probably you do not have any songs in your
-        Spotify history
+      <div className="p-8 text-center font-clash_display text-2xl font-semibold text-red-500 lg:p-0 lg:text-4xl">
+        <p>
+          {" "}
+          Something went wrong, most probably you do not have any songs in your
+          Spotify history.{" "}
+        </p>
+        <br />
+        <p>Please listen to some songs and come back later.</p>
       </div>
     );
   }
 
-  const songsString = trackData
-    .map((song, index) => `${index + 1}. ${song.name} by ${song.artist}`)
-    .join("; ");
-
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-row">
-        {trackData.map((track) => (
-          <TrackItem key={uuid()} track={track} />
-        ))}
-      </div>
-      {trackData.length > 0 && (
-        <FetchMovieRecommendationsButton
-          songs={songsString}
-          trackData={trackData}
-        />
-      )}
+    <div className="flex h-80 w-screen flex-col items-center overflow-hidden sm:h-[32rem] md:h-96">
+      <TracksCarousel songs={trackData} />
     </div>
   );
 };

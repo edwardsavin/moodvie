@@ -17,7 +17,7 @@ export const fetchTracks = async (url: string, token: string) => {
 
   if (data.length <= 0) {
     toast.error("No tracks found in your Spotify history.");
-    return;
+    return [];
   }
 
   return data;

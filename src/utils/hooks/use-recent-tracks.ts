@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { fetchTracks } from "~/utils/fetchers";
 import { useEffect } from "react";
 
-type Track = {
+export type Track = {
   name: string;
   artist: string;
   id: string;
