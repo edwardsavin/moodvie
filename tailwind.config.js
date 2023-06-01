@@ -93,4 +93,7 @@ export const theme = {
     },
   },
 };
-export const plugins = [require("tailwindcss-animate")];
+export const plugins = [
+  require("tailwind-scrollbar")({ nocompatible: true }),
+  require("tailwindcss-animate"),
+];

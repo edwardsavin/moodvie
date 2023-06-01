@@ -93,4 +93,8 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     overscroll-behavior: none;
   }
+
+  html {
+    @apply scroll-smooth accent-primary scrollbar-thin scrollbar-track-transparent scrollbar-thumb-green-700;
+  }
 }
