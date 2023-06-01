@@ -111,20 +111,21 @@ const TracksCarousel = ({ songs, songsDb }: TracksCarouselProps) => {
             ></Image>
           </motion.a>
 
-          {index === position && (
-            <p
-              className="pointer-events-none absolute bottom-0 left-0 h-auto w-full animate-fade-in text-center font-clash_display text-2xl font-semibold text-gray-50"
-              style={{
-                textShadow: "0px 3px 1px rgba(0, 0, 0, 1)",
-                background:
-                  "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%)",
-              }}
-            >
-              <span>{isTrack(track) ? track.name : track.title}</span>
-              <br />
-              <span> by {track.artist}</span>
-            </p>
-          )}
+          {/* TODO: Add track info, but not on top of the cover art since this is not following the Spotify guidelines */}
+          {/* {index === position && ( */}
+          {/*   <motion.p */}
+          {/*     className="pointer-events-none absolute bottom-0 left-0 h-auto w-full animate-fade-in text-center font-clash_display text-2xl font-semibold text-gray-50" */}
+          {/*     style={{ */}
+          {/*       textShadow: "0px 3px 1px rgba(0, 0, 0, 1)", */}
+          {/*       background: */}
+          {/*         "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%)", */}
+          {/*     }} */}
+          {/*   > */}
+          {/*     <span>{isTrack(track) ? track.name : track.title}</span> */}
+          {/*     <br /> */}
+          {/*     <span> by {track.artist}</span> */}
+          {/*   </motion.p> */}
+          {/* )} */}
         </motion.div>
       ))}
     </div>
