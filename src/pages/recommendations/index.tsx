@@ -13,6 +13,13 @@ const Recommendations: NextPage = () => {
           name="description"
           content="Moodvie - Get movie recommendations based on your mood and music taste."
         />
+        <meta property="og:title" content="Recommendations | Moodvie" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content="https://moodvie.edwardcs.com/recommendations"
+        />
+        <meta property="twitter:title" content="Recommendations | Moodvie" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
