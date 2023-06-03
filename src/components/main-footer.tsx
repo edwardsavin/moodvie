@@ -1,5 +1,6 @@
 import { Separator } from "./ui/separator";
 import Image from "next/image";
+import spotifyLogo from "../../public/Spotify_Logo_RGB_Green.png";
 
 const MainFooter = () => (
   <footer className="mt-auto w-full py-12 text-center">
@@ -14,12 +15,7 @@ const MainFooter = () => (
           <p className="font-clash_display text-sm font-semibold text-gray-300">
             Powered by
           </p>
-          <Image
-            src="/Spotify_Logo_RGB_Green.png"
-            alt="Spotify logo"
-            width={80}
-            height={24}
-          />
+          <Image src={spotifyLogo} alt="Spotify logo" width={80} height={24} />
         </div>
       </a>
 
