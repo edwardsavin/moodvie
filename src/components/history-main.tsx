@@ -11,7 +11,7 @@ const HistoryMain = (
   { recommendations }: HistoryMainProps = { recommendations: [] }
 ) => {
   return (
-    <main id="content">
+    <main id="content" className="flex-grow">
       <section className="py-12 sm:py-8 md:py-12 lg:py-14 xl:py-12 2xl:py-28">
         <div className="mx-auto max-w-[800px] xl:max-w-7xl">
           <div className="lg:px-8">
