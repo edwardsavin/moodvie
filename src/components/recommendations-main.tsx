@@ -52,7 +52,7 @@ const RecommendationsMain = () => {
   }, [trackData]);
 
   return (
-    <main id="content">
+    <main id="content" className="flex-grow">
       <section className="py-12 sm:py-8 md:py-12 lg:py-14 xl:py-12 2xl:py-28">
         <div className="flex flex-col items-center">
           <div>{!user.isSignedIn && <SignInSpotifyButton />}</div>

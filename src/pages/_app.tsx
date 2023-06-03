@@ -49,7 +49,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
 
       <div
-        className={`${archivo.variable} ${clash_display.variable} font-archivo`}
+        className={`${archivo.variable} ${clash_display.variable} font-archivo flex h-[100dvh] flex-col`}
       >
         <ClerkProvider {...pageProps} appearance={{ baseTheme: dark }}>
           <Toaster />

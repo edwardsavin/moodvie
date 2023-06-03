@@ -3,7 +3,7 @@ import Presentation from "./presentation";
 
 const LandingMain = () => {
   return (
-    <main id="content">
+    <main id="content" className="flex-grow">
       <Hero />
       <Presentation />
     </main>
