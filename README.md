@@ -16,7 +16,7 @@ https://github.com/edwardsavin/moodvie/assets/9148855/c4e47f7e-a6fd-4784-94a9-cf
 
 ## Project Status
 
-Moodvie is currently in the **alpha stage** and under active development (**non-test users cannot register at the moment**). I am constantly working on improving the app and looks. If you have any suggestions or would like to contribute, please refer to the [Contributing](#contributing) section below.
+Moodvie is currently in the **beta stage** and under active development (**non-test users will not be able to use the app at the moment**). I am constantly working on improving the app and looks. If you have any suggestions or would like to contribute, please refer to the [Contributing](#contributing) section below.
 
 ## Table of Contents
 * [Features](#features)
