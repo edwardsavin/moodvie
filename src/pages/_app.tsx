@@ -25,6 +25,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
+        <meta property="og:type" content="website" />
         <meta
           property="og:image"
           content="https://res.cloudinary.com/dpg37nk6q/image/upload/v1685749044/moodvie-og_bv4xwp.png"
@@ -41,6 +42,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           property="twitter:description"
           content="Moodvie is a movie recommendation engine that uses your mood to find the perfect movie for you."
         />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@edw_dev" />
+        <meta name="twitter:creator" content="@edw_dev" />
+        <meta name="twitter:domain" content="moodvie.edwardcs.com" />
       </Head>
 
       <div
