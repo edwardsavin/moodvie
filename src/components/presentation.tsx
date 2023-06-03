@@ -8,11 +8,14 @@ const Presentation = () => (
         muted
         loop
         playsInline
-        poster="/moodvie-presentation-poster.jpg"
+        poster="https://res.cloudinary.com/dpg37nk6q/image/upload/v1685782563/moodvie-presentation-poster_ez215r.jpg"
         width="1200px"
         className="rounded-lg border-4 border-neutral-900 bg-neutral-900 shadow-xl md:hidden"
       >
-        <source src="/moodvie-presentation.mp4" type="video/mp4" />
+        <source
+          src="https://res.cloudinary.com/dpg37nk6q/video/upload/v1685794606/moodvie-presentation_qrjkde.mp4"
+          type="video/mp4"
+        />
         You need a browser that supports HTML5 video to view this video.
       </video>
 
@@ -28,10 +31,13 @@ const Presentation = () => (
           muted
           loop
           playsInline
-          poster="/moodvie-presentation-poster.jpg"
+          poster="https://res.cloudinary.com/dpg37nk6q/image/upload/v1685782563/moodvie-presentation-poster_ez215r.jpg"
           width="1200px"
         >
-          <source src="/moodvie-presentation.mp4" type="video/mp4" />
+          <source
+            src="https://res.cloudinary.com/dpg37nk6q/video/upload/v1685794606/moodvie-presentation_qrjkde.mp4"
+            type="video/mp4"
+          />
           You need a browser that supports HTML5 video to view this video.
         </video>
       </Link>
