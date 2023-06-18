@@ -1,6 +1,6 @@
 <div align="center">
 
-<h2>Currently, I am awaiting the review of the application by the Spotify team to secure an extended API quota. Meanwhile, if you would like to experience the app, please don't hesitate to contact me on <a href="https://www.linkedin.com/in/edwardsavin/" target="_blank">LinkedIn</a> or via <a href="mailto: contact@edwardcs.com">Email</a>, and I will gladly provide you with a demo account.</h2>
+<h2>Currently, I am awaiting the review of the application by the Spotify team to secure an extended API quota. Meanwhile, if you would like to experience the app, please don't hesitate to contact me on <a href="https://www.linkedin.com/in/edwardsavin/" target="_blank">LinkedIn</a> or via <a href="mailto: contact@edwardcs.com">Email</a> (contact@edwardcs.com), and I will gladly provide you with a demo account.</h2>
 
 # Moodvie
 
@@ -20,7 +20,7 @@ https://github.com/edwardsavin/moodvie/assets/9148855/c4e47f7e-a6fd-4784-94a9-cf
 
 Moodvie is currently in the **beta stage** and under active development (**non-test users will not be able to use the app at the moment**). I am constantly working on improving the app and looks. If you have any suggestions or would like to contribute, please refer to the [Contributing](#contributing) section below.
 
-<h3>If you wish to try out the app, please feel free to reach out to me on <a href="https://www.linkedin.com/in/edwardsavin/" target="_blank">LinkedIn</a> or via <a href="mailto: contact@edwardcs.com">Email</a> so I can  provide you with a demo account. (Currently awaiting Spotify API review for an extended quota.)</h3>
+<h3>If you wish to try out the app, please feel free to reach out to me either on <a href="https://www.linkedin.com/in/edwardsavin/" target="_blank">LinkedIn</a> or via <a href="mailto: contact@edwardcs.com">Email</a> (contact@edwardcs.com) so I can  provide you with a demo account. (Currently awaiting Spotify API review for an extended quota.)</h3>
 
 ## Table of Contents
 * [Features](#features)
