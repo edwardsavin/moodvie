@@ -1,12 +1,21 @@
 import Image from "next/image";
 import MovieModal from "./movie-modal";
-import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import type { MovieInfo } from "~/pages/api/tmdb-fetch-movie-info";
 import type { Movie } from "@prisma/client";
 
 type MovieCardProps = {
   movieInfo?: MovieInfo;
   movieDb?: Movie;
+};
+
+// Truncate the movie title if it's too long
+const truncateText = (string: string, maxLength: number) => {
+  if (string.length > maxLength) {
+    return string.substring(0, maxLength) + "...";
+  } else {
+    return string;
+  }
 };
 
 // Display the movie recommendations with a poster, title, release year and overview
@@ -24,7 +33,7 @@ const MovieCard = ({ movieInfo, movieDb }: MovieCardProps) => {
         <div className="mt-4 flex flex-col">
           <h2 className="font-clash_display font-semibold text-yellow-100">
             <p className="cursor-pointer text-xl">
-              {movieInfo?.title || movieDb?.title}
+              {truncateText(movieInfo?.title || (movieDb?.title as string), 20)}
             </p>{" "}
             <p className="font-archivo">
               ⭐
