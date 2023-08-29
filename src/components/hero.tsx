@@ -1,9 +1,9 @@
 import Link from "next/link";
-import SignInSpotifyButton from "~/components/signin-spotify";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import DemoInfoModal from "~/components/demo-info-modal";
 
 const Hero = () => {
   const user = useUser();
@@ -41,7 +41,7 @@ const Hero = () => {
                   </p>
 
                   <div className="mt-4 flex w-full items-center justify-center gap-4 xl:mt-8">
-                    {!user.isSignedIn && <SignInSpotifyButton />}
+                    {!user.isSignedIn && <DemoInfoModal />}
 
                     {isLoading && (
                       <Button
